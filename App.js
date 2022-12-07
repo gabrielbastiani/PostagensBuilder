@@ -1,10 +1,14 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import { StatusBar } from 'react-native';
 
-export default function PostagensBuilder() {
-  return (
-    <View>
-      <Text>Teste</Text>
-    </View>
+import { NavigationContainer } from '@react-navigation/native'
+import Routes from './src/routes'
+
+export default function App() {
+ return (
+   <NavigationContainer>
+     <StatusBar backgroundColor="#36393F" barStyle="light-content" translucent={false} />
+     <Routes/>
+   </NavigationContainer>
   );
 }
