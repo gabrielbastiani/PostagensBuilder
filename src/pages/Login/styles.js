@@ -1,5 +1,12 @@
 import styled from 'styled-components/native';
 
+
+export const TextApp = styled.Text`
+  color: orange;
+  margin-bottom: 15px;
+  font-size: 17px;
+`;
+
 export const Logo = styled.Image`
   margin-bottom: 15px;
   height: 155px;
@@ -20,7 +27,11 @@ export const Title = styled.Text`
   font-style: italic;
 `;
 
-export const Input = styled.TextInput`
+export const Input = styled.TextInput.attrs({
+  placeholderTextColor: "grey",
+})
+`
+  color: black;
   width: 80%;
   background-color: #fff;
   margin-top: 10px;
@@ -31,7 +42,7 @@ export const Input = styled.TextInput`
 
 export const Button = styled.TouchableOpacity`
   width: 80%;
-  background-color: #418cfd;
+  background-color: orange;
   border-radius: 8px;
   margin-top: 10px;
   padding: 10px;
