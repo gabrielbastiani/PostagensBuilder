@@ -66,3 +66,9 @@ export const SignUpText = styled.Text`
   color: #ddd;
   font-size: 15px;
 `;
+
+export const RecoveryDiv = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
