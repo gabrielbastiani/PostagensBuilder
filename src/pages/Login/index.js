@@ -1,10 +1,13 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, TextApp, Logo, Input, Button, ButtonText, SignUpButton, SignUpText } from './styles';
-import { Text } from 'react-native';
+import { Text, ActivityIndicator } from 'react-native';
 import { api } from '../../services/api';
+import { Auth } from '../../contexts/Auth';
 
 
 function Login() {
+
+  const { signIn, loadingAuth } = useContext(Auth);
 
   const [login, setLogin] = useState(true);
   const [name, setName] = useState("");
@@ -26,6 +29,7 @@ function Login() {
       return;
     }
 
+    await signIn({ email, password });
 
   }
 
@@ -80,7 +84,13 @@ function Login() {
         />
 
         <Button onPress={handleSignIn}>
-          <ButtonText>Acessar</ButtonText>
+          <ButtonText>
+          { loadingAuth ? (
+            <ActivityIndicator size={25} color="#FFF"/>
+          ) : (
+            <Text>Acessar</Text>
+          )}
+          </ButtonText>
         </Button>
 
         <SignUpButton onPress={toggleLogin}>
@@ -104,7 +114,7 @@ function Login() {
         autoCorrect={false}
         autoCapitalize="none"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChangeText={setName}
       />
 
       <Input
@@ -112,7 +122,7 @@ function Login() {
         autoCorrect={false}
         autoCapitalize="none"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChangeText={setEmail}
       />
 
       <Input
@@ -120,7 +130,7 @@ function Login() {
         autoCorrect={false}
         autoCapitalize="none"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChangeText={setPassword}
       />
 
       <Button
