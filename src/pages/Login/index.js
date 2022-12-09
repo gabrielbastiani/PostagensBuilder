@@ -14,6 +14,7 @@ import { Text, ActivityIndicator } from 'react-native';
 import { api } from '../../services/api';
 import { Auth } from '../../contexts/Auth';
 
+
 function Login() {
 
   const navigation = useNavigation()
