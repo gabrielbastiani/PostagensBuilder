@@ -25,7 +25,6 @@ function Login() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
 
   function toggleLogin() {
@@ -53,8 +52,6 @@ function Login() {
         return;
       }
 
-      setLoading(true);
-
       await api.post('/users', { name: name, email: email, password: password });
 
       alert('Acesse seu email para confirmar seu cadastro!');
@@ -68,8 +65,6 @@ function Login() {
     setEmail('');
     setPassword('');
 
-    setLoading(false);
-    
   }
 
 
@@ -114,7 +109,7 @@ function Login() {
           <SignUpText>Criar uma conta</SignUpText>
         </SignUpButton>
 
-        <SignUpButton onPress={ () => navigation.navigate('RecoverySenha')}>
+        <SignUpButton onPress={() => navigation.navigate('RecoverySenha')}>
           <SignUpText>Esqueceu sua Senha?</SignUpText>
         </SignUpButton>
 
@@ -154,8 +149,12 @@ function Login() {
         onChangeText={setPassword}
       />
 
-      <Button onPress={handleSignUp} loading={loading}>
-        <ButtonText>Cadastrar</ButtonText>
+      <Button onPress={handleSignUp}>
+        {loadingAuth ? (
+          <ActivityIndicator size={25} color="#FFF" />
+        ) : (
+          <ButtonText>Cadastrar</ButtonText>
+        )}
       </Button>
 
       <SignUpButton onPress={toggleLogin}>
