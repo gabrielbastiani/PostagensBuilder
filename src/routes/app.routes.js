@@ -65,6 +65,7 @@ function AppRoutes(){
         name="HomeTab"
         component={StackRoutes}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => {
             return <Feather name="home" color={color} size={size} />
           }
