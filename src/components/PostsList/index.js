@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     Container,
     Name,
@@ -17,47 +17,50 @@ import { ptBR } from 'date-fns/locale';
 import { api } from '../../services/api';
 
 
-function PostsList({data, userId}) {
+function PostsList({ data, userId }) {
 
     const [likePost, setLikePost] = useState(data?.like);
 
 
-    async function handleLikePost(id){
-        const docId = `${userId}_${id}`;
-        const user_id = userId;
+    async function handleLikePost(id) {
+        try {
+            const docId = `${userId}_${id}`;
+            const user_id = userId;
 
-        await api.post('/docId', {user_id: user_id, docId: docId});
-        const doc = await api.get('/docIdAll');
+            await api.post('/docId', { user_id: user_id, docId: docId });
+            const doc = await api.get('/docIdAll');
 
-        const docs = doc.data.length;
+            const docs = doc.data.length;
 
-        const docss = parseFloat(docs);
+            const docss = parseFloat(docs);
 
-        console.log(docss)
+            if (docss > 1) {
+                await api.put('/deslike', { post_id: id });
 
-        if(docss > 1){
-            await api.put('/deslike', {post_id: id});
+                const docFind = await api.get('/docId');
 
-            const docFind = await api.get('/docId');
+                const idDoc = String(docFind.data.id);
 
-            const idDoc = String(docFind.data.id);
+                await api.delete('/deleteDoc', { doclikespost_id: idDoc });
 
-            // Deletar DocPosts criado
-            await api.delete('/deleteDoc', {id: idDoc});
-            
-            setLikePost(data.like - 1);
+                setLikePost(data.like - 1);
 
-            return;
+                return;
+            }
+
+            await api.put('/like', { post_id: id });
+
+            setLikePost(data.like + 1);
+
+        } catch (error) {
+            console.log(error.response.data)
         }
 
-        await api.put('/like', {post_id: id});
-
-        setLikePost(data.like + 1);
     }
 
 
 
-    function formatTimePost(){
+    function formatTimePost() {
         const datePost = new Date(data.created_at);
 
         return formatDistance(
@@ -77,7 +80,7 @@ function PostsList({data, userId}) {
                 ) : (
                     <Avatar source={require('../../assets/avatar.png')} />
                 )}
-                
+
                 <Name numberOfLines={1}>
                     {data?.name}
                 </Name>
@@ -88,7 +91,7 @@ function PostsList({data, userId}) {
             </ContentView>
 
             <Actions>
-                <LikeButton onPress={ () => handleLikePost(data.id, likePost)}>
+                <LikeButton onPress={() => handleLikePost(data.id, likePost)}>
                     <Like>
                         {likePost === 0 ? '' : likePost}
                     </Like>
