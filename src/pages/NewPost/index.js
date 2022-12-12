@@ -14,7 +14,8 @@ function NewPost() {
     const name = user.name;
     const [photo, setPhoto] = useState(avatarUrl);
     const [description, setDescription] = useState("");
-    const [like, setLike] =useState(0);
+    const [like, setLike] = useState(0);
+    const [imgPost, setImgPost] = useState('');
 
 
     useEffect(() => {
@@ -44,10 +45,11 @@ function NewPost() {
         avatarUrl = null;
     }
 
+
     let imgPostUrl = null;
 
     try {
-        let responseImgPost = photo;
+        let responseImgPost = imgPost;
         imgPostUrl = responseImgPost;
     } catch (error) {
         imgPostUrl = null;
@@ -62,7 +64,7 @@ function NewPost() {
                 return;
             }
 
-            await api.post('/post', { name: name, description: description, like: like, photo: photo });
+            await api.post('/post', { name: name, description: description, like: like, imgPost: imgPost });
 
             alert('Post realizado no Feed!');
 
@@ -72,6 +74,7 @@ function NewPost() {
         }
 
         setDescription('');
+        navigation.goBack();
 
     }
 
