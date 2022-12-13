@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Container,
     Name,
@@ -20,35 +20,44 @@ import { api } from '../../services/api';
 function PostsList({ data, userId }) {
 
     const [likePost, setLikePost] = useState(data?.like);
+    const [docIds, setDocIds] = useState('');
+
+    useEffect(() => {
+        async function loadDocId() {
+            const response = await api.get('/docIdAll');
+            setDocIds(response.data)
+        }
+        loadDocId();
+    }, [])
+
+    console.log(docIds.docId)
 
     async function handleLikePost(id) {
         try {
             const docId = `${userId}_${id}`;
             const user_id = userId;
-            const post_id = id;
 
-            //Checar se o post já foi curtido
-            await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
-            const doc = await api.get('/docIdAll');
+            /* //Checar se o post já foi curtido
+            const {data} = await api.get('/docId'); */
 
-            const docs = doc.data.length;
+            /* console.log(data)
+           
+            console.log(docIds) */
 
-            const docss = parseFloat(docs);
-
-            if (docss > 1) {
+            if (docIds === docId) {
                 //Que dizer que já curtiu esse post, entao precisamos remover o like
                 await api.put('/deslike', { post_id: id });
 
-                const docFind = await api.get('/docId');
-
-                const idDoc = String(docFind.data.id);
-
-                await api.delete('/deleteDoc', { doclikespost_id: idDoc });
+                await api.delete('/deleteDoc', { docId: docId });
 
                 setLikePost(data.like - 1);
 
                 return;
             }
+
+            // Precisamos dar o like no post
+            const post_id = id;
+            await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
 
             await api.put('/like', { post_id: id });
 
