@@ -21,13 +21,14 @@ function PostsList({ data, userId }) {
 
     const [likePost, setLikePost] = useState(data?.like);
 
-
     async function handleLikePost(id) {
         try {
             const docId = `${userId}_${id}`;
             const user_id = userId;
+            const post_id = id;
 
-            await api.post('/docId', { user_id: user_id, docId: docId });
+            //Checar se o post já foi curtido
+            await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
             const doc = await api.get('/docIdAll');
 
             const docs = doc.data.length;
@@ -35,6 +36,7 @@ function PostsList({ data, userId }) {
             const docss = parseFloat(docs);
 
             if (docss > 1) {
+                //Que dizer que já curtiu esse post, entao precisamos remover o like
                 await api.put('/deslike', { post_id: id });
 
                 const docFind = await api.get('/docId');
