@@ -20,35 +20,64 @@ import { api } from '../../services/api';
 function PostsList({ data, userId }) {
 
     const [likePost, setLikePost] = useState(data?.like);
-    const [docIds, setDocIds] = useState('');
 
-    useEffect(() => {
-        async function loadDocId() {
-            const response = await api.get('/docIdAll');
-            setDocIds(response.data)
-        }
-        loadDocId();
-    }, [])
-
-    console.log(docIds.docId)
-
+    
     async function handleLikePost(id) {
+        try {
+            const docId = `${userId}_${id}`;
+
+            const docs = await api.get(`/docIdFind?docId=${docId}`);
+
+            const doc = docs.data.allDocId;
+
+            console.log(doc)
+            
+            if (!doc) {
+                const docId = `${userId}_${id}`;
+                await api.put('/deslike', { post_id: id });
+
+                await api.delete(`/deleteDoc?docId=${docId}`);
+
+                setLikePost(data.like - 1);
+
+                return;
+
+            } else if (docId) {
+                const user_id = userId;
+                const post_id = id;
+                await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
+
+                await api.put('/like', { post_id: id });
+
+                setLikePost(data.like + 1);
+
+                return;
+            }
+        } catch (error) {
+            console.log(error.response.data)
+        }
+
+    }
+
+
+    /* async function handleLikePost(id) {
         try {
             const docId = `${userId}_${id}`;
             const user_id = userId;
 
-            /* //Checar se o post já foi curtido
-            const {data} = await api.get('/docId'); */
+            //Checar se o post já foi curtido
+            const {data} = await api.get(`/docIdFind?docId=${docId}`);
 
-            /* console.log(data)
+            const doc = data?.allDocId.docId;
+
+            console.log(doc)
            
-            console.log(docIds) */
 
-            if (docIds === docId) {
+            if (docId) {
                 //Que dizer que já curtiu esse post, entao precisamos remover o like
                 await api.put('/deslike', { post_id: id });
 
-                await api.delete('/deleteDoc', { docId: docId });
+                await api.delete(`/deleteDoc?docId=${docId}`);
 
                 setLikePost(data.like - 1);
 
@@ -67,7 +96,7 @@ function PostsList({ data, userId }) {
             console.log(error.response.data)
         }
 
-    }
+    } */
 
 
 
