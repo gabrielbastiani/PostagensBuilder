@@ -20,31 +20,40 @@ import { api } from '../../services/api';
 function PostsList({ data, userId }) {
 
     const [likePost, setLikePost] = useState(data?.like);
-    const [docIds, setDocIds] = useState('');
+    const [docIds, setDocIds] = useState("");
 
     useEffect(() => {
-        async function loadDocId() {
-            const response = await api.get('/docIdAll');
-            setDocIds(response.data)
+        async function loadDocId(){
+            try {
+                const data = await api.get('/docIdFind');
+
+                setDocIds(data)
+            } catch (error) {
+                console.error(error)
+            }
         }
-        loadDocId();
+        loadDocId()
     }, [])
 
-    console.log(docIds.docId)
+    
+
+    console.log(docIds)
+
+    
 
     async function handleLikePost(id) {
         try {
             const docId = `${userId}_${id}`;
             const user_id = userId;
 
-            /* //Checar se o post já foi curtido
-            const {data} = await api.get('/docId'); */
+            //Checar se o post já foi curtido
+            /* const doc = await api.get('/docId');
 
-            /* console.log(data)
-           
-            console.log(docIds) */
+            const docid = doc;
 
-            if (docIds === docId) {
+            console.log(docid) */
+
+            if (docId === doc) {
                 //Que dizer que já curtiu esse post, entao precisamos remover o like
                 await api.put('/deslike', { post_id: id });
 
