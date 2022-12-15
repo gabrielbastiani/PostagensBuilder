@@ -62,6 +62,19 @@ function Home() {
         setLoadingRefresh(false);
     }
 
+    async function handleRefreshLikes() {
+        setLoadingRefresh(true);
+
+        const allPosts = await api.get('/allPosts');
+        
+        setPosts([])
+
+        setPosts(allPosts.data);
+        setLoading(false);
+
+        setLoadingRefresh(false);
+    }
+
     // Buscar mais posts ao chegar no final da lista
     /* async function getListPosts(){
         if(emptyList){
@@ -89,6 +102,7 @@ function Home() {
                         <PostsList
                             data={item}
                             userId={user?.id}
+                            refreshingLike={ () => handleRefreshLikes()}
                         />
                     )}
 

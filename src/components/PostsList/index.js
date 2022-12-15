@@ -15,59 +15,65 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { formatDistance } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { api } from '../../services/api';
+import { useNavigation } from '@react-navigation/native';
 
 
-function PostsList({ data, userId }) {
+function PostsList({ data, userId, refreshingLike }) {
 
+    const navigation = useNavigation();
     const [likePost, setLikePost] = useState(data?.like);
     const [docIds, setDocIds] = useState('');
 
     const post_id = data.id;
+    
 
     useEffect(() => {
-        async function loadDocId(){
-            try {
-                const docId = `${userId}_${post_id}`;
-                const response = api.get(`/docIdFind?docId=${docId}`);
-                setDocIds((await response).data.docId);
-            } catch (error) {
-                return
+            async function loadDocId() {
+                try {
+                    const docId = `${userId}_${post_id}`;
+                    const response = api.get(`/docIdFind?docId=${docId}`);
+                    setDocIds((await response).data.docId);
+                } catch (error) {
+                    return
+                }
             }
-        }
-        loadDocId();
+            loadDocId();
     }, [setDocIds]);
 
-    
+
     async function handleLikePost(id) {
+        let docId = `${userId}_${id}`;
         try {
-            const docId = `${userId}_${id}`;
-            
-            if (docId === docIds) {
-                
-                const docId = `${userId}_${id}`;
+    
+            if (docId == docIds) {
+
                 await api.put('/deslike', { post_id: id });
 
                 await api.delete(`/deleteDoc?docId=${docId}`);
 
                 setLikePost(data.like - 1);
 
-                return;
-
-            } else if (docId) {
-                const user_id = userId;
-                const post_id = id;
-
-                await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
-
-                await api.put('/like', { post_id: id });
-
-                setLikePost(data.like + 1);
+                refreshingLike()
 
                 return;
+
             }
+
+            const user_id = userId;
+            const post_id = id;
+
+            await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
+
+            await api.put('/like', { post_id: id });
+
+            setLikePost(data.like + 1);
+
+
         } catch (error) {
             console.log(error.response.data);
         }
+
+        refreshingLike()
 
     }
 
@@ -86,7 +92,7 @@ function PostsList({ data, userId }) {
 
     return (
         <Container>
-            <Header>
+            <Header onPress={() => navigation.navigate("PostsUser", {title: data.name})}>
                 {data.photo ? (
                     <Avatar source={{ uri: data.photo }} />
                 ) : (
@@ -103,7 +109,8 @@ function PostsList({ data, userId }) {
             </ContentView>
 
             <Actions>
-                <LikeButton onPress={() => handleLikePost(data.id, likePost)}>
+                <LikeButton
+                    onPress={() => handleLikePost(data.id, likePost)}>
                     <Like>
                         {likePost === 0 ? '' : likePost}
                     </Like>
