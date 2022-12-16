@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState, useCallback, useContext} from "react";
+import React, { useLayoutEffect, useState, useCallback, useContext } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { api } from "../../services/api";
@@ -7,7 +7,7 @@ import PostsList from '../../components/PostsList';
 import { Container, ListPosts } from "./styles";
 
 
-function PostsUser(){
+function PostsUser() {
 
     const route = useRoute();
     const navigation = useNavigation();
@@ -27,14 +27,14 @@ function PostsUser(){
         useCallback(() => {
             let isActive = true;
 
-            async function fetchPosts(){
+            async function fetchPosts() {
 
-            const allPosts = await api.get(`/postsUser?name=${title}`);
+                const allPosts = await api.get(`/postsUser?name=${title}`);
 
-            if(isActive){
-                setPosts(allPosts.data);
-                setLoading(false);
-            }
+                if (isActive) {
+                    setPosts(allPosts.data);
+                    setLoading(false);
+                }
 
             }
 
@@ -46,17 +46,17 @@ function PostsUser(){
         }, [])
     )
 
-    return(
+    return (
         <Container>
-            { loading ? (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            {loading ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator size={50} color="orange" />
                 </View>
             ) : (
                 <ListPosts
                     showsVerticalScrollIndicator={false}
                     data={posts}
-                    renderItem={ ({item}) => <PostsList data={item} userId={user?.id} /> }
+                    renderItem={({ item }) => <PostsList data={item} userId={user?.id} />}
                 />
             )}
         </Container>
