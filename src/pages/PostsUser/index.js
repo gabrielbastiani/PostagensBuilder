@@ -15,6 +15,7 @@ function PostsUser() {
     const [title, setTitle] = useState(route.params?.title);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingRefresh, setLoadingRefresh] = useState(false);
 
 
     useLayoutEffect(() => {
@@ -46,6 +47,17 @@ function PostsUser() {
         }, [])
     )
 
+    async function handleRefreshLikes() {
+        setLoadingRefresh(true);
+
+        const allPosts = await api.get(`/postsUser?name=${title}`);
+
+        setPosts(allPosts.data);
+        setLoading(false);
+
+        setLoadingRefresh(false);
+    }
+
     return (
         <Container>
             {loading ? (
@@ -57,6 +69,8 @@ function PostsUser() {
                     showsVerticalScrollIndicator={false}
                     data={posts}
                     renderItem={({ item }) => <PostsList data={item} userId={user?.id} />}
+                    refreshing={loadingRefresh}
+                    onRefresh={handleRefreshLikes}
                 />
             )}
         </Container>
