@@ -75,6 +75,7 @@ function AppRoutes(){
         name="Search"
         component={Search}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => {
             return <Feather name="search" color={color} size={size} />
           }
@@ -84,6 +85,7 @@ function AppRoutes(){
         name="Profile"
         component={Profile}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => {
             return <Feather name="user" color={color} size={size} />
           }
