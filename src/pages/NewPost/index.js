@@ -2,14 +2,14 @@ import React, { useState, useLayoutEffect, useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Container, Input, Button, ButtonText } from './styles';
 import { api } from '../../services/api';
-import { Auth } from '../../contexts/Auth';
+import { auth } from '../../contexts/auth';
 
 
 function NewPost() {
 
     const navigation = useNavigation();
 
-    const { user } = useContext(Auth);
+    const { user } = useContext(auth);
 
     const name = user.name;
     const [photo, setPhoto] = useState(avatarUrl);

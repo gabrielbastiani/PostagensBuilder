@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState, useCallback, useContext } from "react
 import { View, Text, ActivityIndicator } from "react-native";
 import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { api } from "../../services/api";
-import { Auth } from '../../contexts/Auth';
+import { auth } from '../../contexts/auth';
 import PostsList from '../../components/PostsList';
 import { Container, ListPosts } from "./styles";
 
@@ -11,7 +11,7 @@ function PostsUser() {
 
     const route = useRoute();
     const navigation = useNavigation();
-    const { user } = useContext(Auth);
+    const { user } = useContext(auth);
     const [title, setTitle] = useState(route.params?.title);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);

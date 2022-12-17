@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { api } from '../services/api';
 
 
-export const Auth = createContext({});
+export const auth = createContext({});
 
 export function AuthProvider({ children }){
     const [ user, setUser ] = useState({
@@ -87,7 +87,7 @@ export function AuthProvider({ children }){
     }
 
     return(
-        <Auth.Provider 
+        <auth.Provider 
             value={{ 
                 user, 
                 isAuthenticated, 
@@ -99,6 +99,6 @@ export function AuthProvider({ children }){
             }}
         >
             {children}
-        </Auth.Provider>
+        </auth.Provider>
     )
 }

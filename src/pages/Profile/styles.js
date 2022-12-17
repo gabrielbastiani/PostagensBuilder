@@ -13,7 +13,6 @@ export const Name = styled.Text`
   font-size: 28px;
   font-weight: bold;
   color: #fff;
-  text-align: center;
 `;
 
 export const Email = styled.Text`

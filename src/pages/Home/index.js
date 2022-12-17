@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback } from "react";
 import { api } from "../../services/api";
-import { Auth } from "../../contexts/Auth";
+import { auth } from "../../contexts/auth";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import Feather from 'react-native-vector-icons/Feather';
@@ -12,7 +12,7 @@ import PostsList from "../../components/PostsList";
 function Home() {
 
     const navigation = useNavigation();
-    const { user } = useContext(Auth);
+    const { user } = useContext(auth);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingRefresh, setLoadingRefresh] = useState(false);

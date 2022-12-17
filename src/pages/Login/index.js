@@ -12,14 +12,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Text, ActivityIndicator } from 'react-native';
 import { api } from '../../services/api';
-import { Auth } from '../../contexts/Auth';
+import { auth } from '../../contexts/auth';
 
 
 function Login() {
 
   const navigation = useNavigation()
 
-  const { signIn, loadingAuth } = useContext(Auth);
+  const { signIn, loadingAuth } = useContext(auth);
 
   const [login, setLogin] = useState(true);
   const [name, setName] = useState('');
