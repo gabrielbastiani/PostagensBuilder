@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, Modal, Platform } from "react-native";
+import { View, Text, Image, Modal, Platform } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { auth } from '../../contexts/auth';
 import Header from '../../components/Header';
@@ -24,25 +24,29 @@ function Profile() {
 
     const { signOut, user } = useContext(auth);
     const [name, setName] = useState(user?.name);
-    const [url, setUrl] = useState(null);
+    const [photo, setPhoto] = useState(null);
     const [open, setOpen] = useState(false);
 
-    let user_id = user.id;
+    let user_id = String(user.id);
 
+    console.log(photo)
 
-    useEffect(()=>{
-        async function loadAvatar(){
-          try{
-            const response = await api.get(`/userPhoto?user_id=${user_id}`);
-            setUrl(response.data.photo);
-          }catch(err){
-            console.log("NAO ENCONTRAMOS NENHUMA FOTO")
-          }
+    useEffect(() => {
+        async function loadAvatar() {
+            try {
+                const response = await api.get(`/userPhoto?user_id=${user_id}`);
+            
+                setPhoto(response?.data.photo);
+
+            } catch (err) {
+                console.log("NAO ENCONTRAMOS NENHUMA FOTO")
+            }
         }
-    
+
         loadAvatar();
-    
+
         return () => loadAvatar();
+
     }, []);
 
     async function handleSignOut() {
@@ -54,12 +58,13 @@ function Profile() {
             return;
         }
         await api.put(`/nameUpdate?user_id=${user_id}`, { name });
+        handleSignOut();
     }
 
     const uploadFile = () => {
         const options = {
             noData: true,
-            mediaType: 'photo'
+            mediaType: 'file'
         };
 
         launchImageLibrary(options, response => {
@@ -68,12 +73,23 @@ function Profile() {
             } else if (response.error) {
                 console.log("Ops parece que deu algum erro")
             } else {
-                uploadFileApi(response)
 
-                console.log("URI DA FOTO", response.assets[0].uri)
-                setUrl(response.assets[0].uri)
+                uploadImageUser(response);
+
+                setPhoto(response.assets[0].uri);
+
             }
         })
+    }
+
+    const getTypefile = (response) => {
+         // extrair e retornar o tipo da foto.
+        return response.assets[0].type;
+    }
+
+    const getFilename = (response) => {
+         // extrair e retornar o nome da foto.
+        return response.assets[0].fileName;
     }
 
     const getFileLocalPath = (response) => {
@@ -81,37 +97,55 @@ function Profile() {
         return response.assets[0].uri;
     }
 
+    const uploadImageUser = async (response) => {
 
-    const uploadFileApi = async (event, response) => {
-        event.preventDefault();
-        /* const fileSource = getFileLocalPath(response); */
+        const fileSource = getFileLocalPath(response);
+        const nameFile = getFilename(response);
+        const typeFile = getTypefile(response);
+
         try {
-            const data = new FormData()
 
-            data.append('user_id', user_id);
-            data.append('file', url);
+            const data = new FormData();
 
-            await api.put('/photoUser', data);
+            data.append("file",
+                {
+                    name: nameFile,
+                    type: typeFile,
+                    uri: fileSource
+                })
+
+            await api.put(`/photoUser?user_id=${user_id}`, data, {
+                headers: {
+                    "Content-Type": 'multipart/form-data',
+                }
+            })
 
         } catch (err) {
             console.log(err.response.data);
         }
+
     }
+
 
 
     return (
         <Container>
             <Header />
 
-            {url ? (
+            <Image
+                style={{ width: 145, height: 150 }}
+                source={{uri: 'http://192.168.0.147:3333/files/' + photo }}
+            />
+
+            {photo ? (
                 <UploadButton onPress={() => uploadFile()}>
                     <UploadText>+</UploadText>
                     <Avatar
-                        source={{ uri: url }}
+                        source={{ uri: 'http://localhost:3333/files/' + photo }}
                     />
                 </UploadButton>
             ) : (
-                <UploadButton onPress={ () => uploadFile()}>
+                <UploadButton onPress={() => uploadFile()}>
                     <UploadText>+</UploadText>
                 </UploadButton>
             )}
