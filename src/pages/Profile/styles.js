@@ -13,6 +13,7 @@ export const Name = styled.Text`
   font-size: 28px;
   font-weight: bold;
   color: #fff;
+  text-align: center;
 `;
 
 export const Email = styled.Text`
@@ -53,7 +54,7 @@ export const UploadButton = styled.TouchableOpacity`
 export const UploadText = styled.Text`
   font-size: 55px;
   position: absolute;
-  color: #e52246;
+  color: orange;
   opacity: 0.5;
   z-index: 99;
 `;

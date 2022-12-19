@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, Text, Image, Modal, Platform } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { auth } from '../../contexts/auth';
-import Header from '../../components/Header';
 import {
     ButtonText,
     Button,
@@ -130,12 +129,6 @@ function Profile() {
 
     return (
         <Container>
-            <Header />
-
-            <Image
-                style={{ width: 145, height: 150 }}
-                source={{uri: 'http://192.168.0.147:3333/files/' + photo }}
-            />
 
             {photo ? (
                 <UploadButton onPress={() => uploadFile()}>
