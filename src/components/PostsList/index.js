@@ -25,7 +25,6 @@ function PostsList({ data, userId, refreshingLike }) {
     const [docIds, setDocIds] = useState('');
 
     const post_id = data.id;
-    
 
     useEffect(() => {
             async function loadDocId() {
@@ -38,11 +37,13 @@ function PostsList({ data, userId, refreshingLike }) {
                 }
             }
             loadDocId();
-    }, [setDocIds]);
+    }, []);
 
 
     async function handleLikePost(id) {
+
         let docId = `${userId}_${id}`;
+
         try {
     
             if (docId == docIds) {
@@ -53,7 +54,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
                 setLikePost(data.like - 1);
 
-                refreshingLike()
+                refreshingLike(docId)
 
                 return;
 
