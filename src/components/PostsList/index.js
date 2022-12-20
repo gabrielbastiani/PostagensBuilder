@@ -94,7 +94,7 @@ function PostsList({ data, userId, refreshingLike }) {
         <Container>
             <Header onPress={() => navigation.navigate("PostsUser", {title: data.name})}>
                 {data.photo ? (
-                    <Avatar source={{ uri: data.photo }} />
+                    <Avatar source={{ uri: 'http://localhost:3333/files/' + photo }} />
                 ) : (
                     <Avatar source={require('../../assets/avatar.png')} />
                 )}
