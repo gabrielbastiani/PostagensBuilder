@@ -25,3 +25,28 @@ export const ButtonText = styled.Text`
     color: white;
     font-size: 16px;
 `;
+
+export const UploadButton = styled.TouchableOpacity`
+  background-color: #fff;
+  width: 325px;
+  height: 165px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  z-index: 8;
+  margin-left: 15px;
+`;
+
+export const UploadText = styled.Text`
+  font-size: 55px;
+  position: absolute;
+  color: orange;
+  opacity: 0.5;
+  z-index: 99;
+`;
+
+export const Avatar = styled.Image`
+  width: 160px;
+  height: 160px;
+  border-radius: 80px;
+`;

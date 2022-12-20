@@ -28,8 +28,6 @@ function Profile() {
 
     let user_id = String(user.id);
 
-    console.log(photo)
-
     useEffect(() => {
         async function loadAvatar() {
             try {

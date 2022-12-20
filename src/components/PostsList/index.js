@@ -54,7 +54,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
                 setLikePost(data.like - 1);
 
-                refreshingLike(docId)
+                refreshingLike()
 
                 return;
 
