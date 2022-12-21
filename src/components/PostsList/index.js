@@ -9,7 +9,11 @@ import {
     LikeButton,
     Actions,
     Like,
-    TimePost
+    TimePost,
+    AnswerButton,
+    TextButton,
+    Empity,
+    Banner
 } from './styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { formatDistance } from 'date-fns';
@@ -109,6 +113,14 @@ function PostsList({ data, userId, refreshingLike }) {
                 <Content>{data?.description}</Content>
             </ContentView>
 
+            {data.imgPost ? (
+                <Banner
+                source={{ uri: 'http://localhost:3333/files/' + data?.imgPost }}
+                />
+            ) : (
+                <Empity></Empity>
+            )}
+
             <Actions>
                 <LikeButton
                     onPress={() => handleLikePost(data.id, likePost)}>
@@ -126,6 +138,11 @@ function PostsList({ data, userId, refreshingLike }) {
                     {formatTimePost()}
                 </TimePost>
             </Actions>
+
+            <AnswerButton onPress={() => navigation.navigate("NewAnswer", {postId: post_id} )}>
+                <TextButton>Responder</TextButton>
+            </AnswerButton>
+
         </Container>
     );
 }

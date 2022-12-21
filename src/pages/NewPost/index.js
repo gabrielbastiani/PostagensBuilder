@@ -12,9 +12,8 @@ function NewPost() {
 
     const { user } = useContext(auth);
 
-    const name = user.name;
+    let name = user.name;
     const [description, setDescription] = useState("");
-    const [like, setLike] = useState(0);
     const [imgPost, setImgPost] = useState(null);
 
     console.log(name)
@@ -32,12 +31,12 @@ function NewPost() {
     useLayoutEffect(() => {
         const options = navigation.setOptions({
             headerRight: () => (
-                <Button onPress={() => handlePost()}>
+                <Button onPress={handlePostDescription}>
                     <ButtonText>Compartilhar</ButtonText>
                 </Button>
             )
         })
-    }, [navigation, description]);
+    }, [navigation, description, imgPost]);
 
 
     const uploadFile = () => {
@@ -52,9 +51,12 @@ function NewPost() {
             } else if (response.error) {
                 console.log("Ops parece que deu algum erro")
             } else {
+
                 console.log(response.assets[0].uri)
-                handlePost(response)
+                
                 setImgPost(response.assets[0].uri);
+
+                handlePost(response)
 
             }
         })
@@ -74,6 +76,7 @@ function NewPost() {
         // extrair e retornar a url da foto.
         return response.assets[0].uri;
     }
+
 
     const handlePost = async (response) => {
 
@@ -112,9 +115,32 @@ function NewPost() {
 
     }
 
+    async function handlePostDescription(event) {
+        event.preventDefault();
+
+        try {
+            if (description === '') {
+                alert('Ops!!! Escreva alguma coisa... não pode deixar em branco!');
+                return;
+            }
+
+            await api.post('/post', { name: name, description: description });
+
+            alert('Post realizado no Feed!');
+
+        } catch (error) {
+            console.log(error);
+            alert('Erro ao postar!');
+        }
+
+        setDescription('');
+        navigation.goBack();
+
+    }
+
     /*let avatarUrl = null;
 
-     tr {
+     try {
         let response = photo;
         avatarUrl = response;
     } catch (error) {
@@ -146,18 +172,18 @@ function NewPost() {
                 maxLength={350}
             />
 
-            {/* {imgPost ? ( */}
+            {imgPost ? (
             <UploadButton onPress={() => uploadFile()}>
                 <UploadText>+</UploadText>
                 <Avatar
                     source={{ uri: 'http://localhost:3333/files/' + imgPost }}
                 />
             </UploadButton>
-            {/*  ) : (
+            ) : (
                 <UploadButton onPress={() => uploadFile()}>
                     <UploadText>+</UploadText>
                 </UploadButton>
-            )} */}
+            )}
         </Container>
     )
 }

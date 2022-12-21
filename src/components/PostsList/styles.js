@@ -58,3 +58,31 @@ export const Like = styled.Text`
 export const TimePost = styled.Text`
   color: #121212;
 `;
+
+export const AnswerButton = styled.TouchableOpacity`
+    background-color: orange;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin: 15px 0;
+`;
+
+export const TextButton = styled.Text`
+  font-size: 15px;
+  color: black;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Empity = styled.View`
+  content: '';
+`;
+
+export const Banner = styled.Image`
+  width: 300px;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin: 25px 0;
+`;

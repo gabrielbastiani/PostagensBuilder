@@ -6,7 +6,8 @@ import Home from '../pages/Home';
 import Profile from '../pages/Profile';
 import Search from '../pages/Search';
 import NewPost from '../pages/NewPost';
-import PostsUser from '../pages/PostsUser'
+import PostsUser from '../pages/PostsUser';
+import NewAnswer from '../pages/NewAnswer';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,18 @@ function StackRoutes(){
         component={NewPost}
         options={{
           title: 'Novo Post',
+          headerTintColor: '#FFF',
+          headerStyle:{
+            backgroundColor: 'black'
+          }
+        }}
+      />
+      
+      <Stack.Screen
+        name='NewAnswer'
+        component={NewAnswer}
+        options={{
+          title: 'Resposta',
           headerTintColor: '#FFF',
           headerStyle:{
             backgroundColor: 'black'
