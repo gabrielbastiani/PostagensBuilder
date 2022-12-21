@@ -34,7 +34,8 @@ export const UploadButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   z-index: 8;
-  margin-left: 15px;
+  margin: 0 15px;
+  margin-top: 20px;
 `;
 
 export const UploadText = styled.Text`
@@ -46,7 +47,13 @@ export const UploadText = styled.Text`
 `;
 
 export const Avatar = styled.Image`
-  width: 160px;
+  width: 320px;
   height: 160px;
-  border-radius: 80px;
+  border-radius: 4px;
+`;
+
+export const Text = styled.Text`
+  margin: 0 15px;
+  margin-top: 20px;
+  color: orange;
 `;

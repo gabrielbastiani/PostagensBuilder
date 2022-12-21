@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect, useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar } from './styles';
+import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar, Text } from './styles';
 import { api } from '../../services/api';
 import { auth } from '../../contexts/auth';
 import { launchImageLibrary } from "react-native-image-picker";
@@ -16,30 +16,8 @@ function NewPost() {
     const [description, setDescription] = useState("");
     const [imgPost, setImgPost] = useState(null);
 
-    console.log(name)
-    console.log(description)
-    console.log(imgPost)
 
-    /* useEffect(() => {
-        async function loadUserDetails() {
-            const userDetails = await api.get('/detailUser');
-            setPhoto(userDetails.data.photo);
-        }
-        loadUserDetails();
-    }, []) */
-
-    useLayoutEffect(() => {
-        const options = navigation.setOptions({
-            headerRight: () => (
-                <Button onPress={handlePostDescription}>
-                    <ButtonText>Compartilhar</ButtonText>
-                </Button>
-            )
-        })
-    }, [navigation, description, imgPost]);
-
-
-    const uploadFile = () => {
+    function uploadFile() {
         const options = {
             noData: true,
             mediaType: 'file'
@@ -52,33 +30,31 @@ function NewPost() {
                 console.log("Ops parece que deu algum erro")
             } else {
 
-                console.log(response.assets[0].uri)
-                
                 setImgPost(response.assets[0].uri);
 
-                handlePost(response)
+                handlePostImage(response);
 
             }
         })
     }
 
-    const getTypefile = (response) => {
-        // extrair e retornar o tipo da foto.
-        return response.assets[0].type;
-    }
 
-    const getFilename = (response) => {
-        // extrair e retornar o nome da foto.
-        return response.assets[0].fileName;
-    }
+    const handlePostImage = async (response) => {
 
-    const getFileLocalPath = (response) => {
-        // extrair e retornar a url da foto.
-        return response.assets[0].uri;
-    }
+        const getTypefile = (response) => {
+            // extrair e retornar o tipo da foto.
+            return response.assets[0].type;
+        }
 
+        const getFilename = (response) => {
+            // extrair e retornar o nome da foto.
+            return response.assets[0].fileName;
+        }
 
-    const handlePost = async (response) => {
+        const getFileLocalPath = (response) => {
+            // extrair e retornar a url da foto.
+            return response.assets[0].uri;
+        }
 
         const fileSource = getFileLocalPath(response);
         const nameFile = getFilename(response);
@@ -112,10 +88,9 @@ function NewPost() {
 
         setDescription('');
         navigation.goBack();
-
     }
 
-    async function handlePostDescription(event) {
+    async function handlePostText(event) {
         event.preventDefault();
 
         try {
@@ -124,39 +99,19 @@ function NewPost() {
                 return;
             }
 
-            await api.post('/post', { name: name, description: description });
+            await api.post('/postText', { name: name, description: description });
 
             alert('Post realizado no Feed!');
 
         } catch (error) {
             console.log(error);
-            alert('Erro ao postar!');
+            alert('Erro ao postar o texto!');
         }
 
         setDescription('');
         navigation.goBack();
 
     }
-
-    /*let avatarUrl = null;
-
-     try {
-        let response = photo;
-        avatarUrl = response;
-    } catch (error) {
-        avatarUrl = null;
-    }
-
-
-    let imgPostUrl = null;
-
-    try {
-        let responseImgPost = imgPost;
-        imgPostUrl = responseImgPost;
-    } catch (error) {
-        imgPostUrl = null;
-    } */
-
 
 
 
@@ -172,15 +127,21 @@ function NewPost() {
                 maxLength={350}
             />
 
+            <Button onPress={handlePostText}>
+                <ButtonText>Compartilhar apenas o texto</ButtonText>
+            </Button>
+
+            <Text>Insira imagem abaixo se desejar</Text>
+
             {imgPost ? (
-            <UploadButton onPress={() => uploadFile()}>
-                <UploadText>+</UploadText>
-                <Avatar
-                    source={{ uri: 'http://localhost:3333/files/' + imgPost }}
-                />
-            </UploadButton>
+                <UploadButton onPress={uploadFile}>
+                    <UploadText>+</UploadText>
+                    <Avatar
+                        source={{ uri: 'http://localhost:3333/files/' + imgPost }}
+                    />
+                </UploadButton>
             ) : (
-                <UploadButton onPress={() => uploadFile()}>
+                <UploadButton onPress={uploadFile}>
                     <UploadText>+</UploadText>
                 </UploadButton>
             )}

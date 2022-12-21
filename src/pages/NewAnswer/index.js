@@ -21,29 +21,6 @@ function NewAnswer() {
     const [imgAnswer, setImgAnswer] = useState(null);
     const [post_id, setPost_id] = useState('');
 
-    console.log(name)
-    console.log(answer)
-    console.log(imgAnswer)
-    console.log(post_id)
-
-    /* useEffect(() => {
-        async function loadUserDetails() {
-            const userDetails = await api.get('/detailUser');
-            setPhoto(userDetails.data.photo);
-        }
-        loadUserDetails();
-    }, []) */
-
-    useLayoutEffect(() => {
-        const options = navigation.setOptions({
-            headerRight: () => (
-                <Button onPress={handleAnswer}>
-                    <ButtonText>Compartilhar</ButtonText>
-                </Button>
-            )
-        })
-    }, [navigation, answer, imgAnswer]);
-
 
     const uploadFile = () => {
         const options = {
@@ -68,23 +45,23 @@ function NewAnswer() {
         })
     }
 
-    const getTypefile = (response) => {
-        // extrair e retornar o tipo da foto.
-        return response.assets[0].type;
-    }
-
-    const getFilename = (response) => {
-        // extrair e retornar o nome da foto.
-        return response.assets[0].fileName;
-    }
-
-    const getFileLocalPath = (response) => {
-        // extrair e retornar a url da foto.
-        return response.assets[0].uri;
-    }
-
 
     const handleAnswer = async (response) => {
+
+        const getTypefile = (response) => {
+            // extrair e retornar o tipo da foto.
+            return response.assets[0].type;
+        }
+    
+        const getFilename = (response) => {
+            // extrair e retornar o nome da foto.
+            return response.assets[0].fileName;
+        }
+    
+        const getFileLocalPath = (response) => {
+            // extrair e retornar a url da foto.
+            return response.assets[0].uri;
+        }
 
         const fileSource = getFileLocalPath(response);
         const nameFile = getFilename(response);
@@ -117,30 +94,33 @@ function NewAnswer() {
             alert('Erro ao postar!');
         }
 
-        setDescription('');
+        setAnswer('');
         navigation.goBack();
 
     }
 
-    /*let avatarUrl = null;
+    async function handlePostText(event) {
+        event.preventDefault();
 
-     tr {
-        let response = photo;
-        avatarUrl = response;
-    } catch (error) {
-        avatarUrl = null;
+        try {
+            if (answer === '') {
+                alert('Ops!!! Escreva alguma coisa... não pode deixar em branco!');
+                return;
+            }
+
+            await api.post('/postAnswer', { name: name, answer: answer });
+
+            alert('Resposta realizada!');
+
+        } catch (error) {
+            console.log(error);
+            alert('Erro ao postar a resposta!');
+        }
+
+        setAnswer('');
+        navigation.goBack();
+
     }
-
-
-    let imgPostUrl = null;
-
-    try {
-        let responseImgPost = imgPost;
-        imgPostUrl = responseImgPost;
-    } catch (error) {
-        imgPostUrl = null;
-    } */
-
 
 
 
@@ -155,6 +135,12 @@ function NewAnswer() {
                 placeholderTextColor="orange"
                 maxLength={350}
             />
+
+            <Button onPress={handlePostText}>
+                <ButtonText>Compartilhar apenas o texto</ButtonText>
+            </Button>
+
+            <Text>Insira imagem abaixo se desejar</Text>
 
             {imgAnswer ? (
             <UploadButton onPress={() => uploadFile()}>
