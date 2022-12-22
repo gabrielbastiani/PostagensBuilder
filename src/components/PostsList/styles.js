@@ -86,3 +86,15 @@ export const Banner = styled.Image`
   object-fit: cover;
   margin: 25px 0;
 `;
+
+export const AnswerList = styled.View`
+  display: flex;
+`;
+
+export const NameAnswer = styled.Text`
+  color: black;
+`;
+
+export const AnswerContent = styled.Text`
+  color: black;
+`;

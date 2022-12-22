@@ -52,7 +52,7 @@ export const Avatar = styled.Image`
   border-radius: 4px;
 `;
 
-export const Text = styled.Text`
+export const TextInfo = styled.Text`
   margin: 0 15px;
   margin-top: 20px;
   color: orange;

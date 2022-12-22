@@ -1,6 +1,6 @@
-import React, { useState, useLayoutEffect, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar } from './styles';
+import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar, TextInfo } from './styles';
 import { api } from '../../services/api';
 import { auth } from '../../contexts/auth';
 import { launchImageLibrary } from "react-native-image-picker";
@@ -108,7 +108,7 @@ function NewAnswer() {
                 return;
             }
 
-            await api.post('/postAnswer', { name: name, answer: answer });
+            await api.post('/postAnswer', { name: name, answer: answer, post_id: postId });
 
             alert('Resposta realizada!');
 
@@ -140,7 +140,7 @@ function NewAnswer() {
                 <ButtonText>Compartilhar apenas o texto</ButtonText>
             </Button>
 
-            <Text>Insira imagem abaixo se desejar</Text>
+            <TextInfo>Insira imagem abaixo se desejar</TextInfo>
 
             {imgAnswer ? (
             <UploadButton onPress={() => uploadFile()}>
