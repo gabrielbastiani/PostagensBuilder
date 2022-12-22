@@ -76,6 +76,7 @@ function NewPost() {
             await api.post('/post', data), {
                 headers: {
                     "Content-Type": 'multipart/form-data',
+                    "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json"
                 }
             }
 

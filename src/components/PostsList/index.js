@@ -30,7 +30,7 @@ function PostsList({ data, userId, refreshingLike }) {
     const navigation = useNavigation();
 
     const [likePost, setLikePost] = useState(data?.like);
-    const [likeAnswer, setLikeAnswer] = useState(data?.postresponde[0].like);
+    /* const [likeAnswer, setLikeAnswer] = useState(data?.postresponde[0].like); */
     const [docIds, setDocIds] = useState('');
     const [docIdsAnswers, setDocIdsAnswers] = useState('');
 
@@ -213,7 +213,7 @@ function PostsList({ data, userId, refreshingLike }) {
                 <TextButton>Responder</TextButton>
             </AnswerButton>
 
-            <AnswerList>
+            {/* <AnswerList>
                 <NameAnswer>
                     {data?.postresponde[0].name}
                 </NameAnswer>
@@ -239,7 +239,7 @@ function PostsList({ data, userId, refreshingLike }) {
                         {formatTimeAnswer()}
                     </TimePost>
                 </Actions>
-            </AnswerList>
+            </AnswerList> */}
 
         </Container>
     );
