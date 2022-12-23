@@ -138,7 +138,7 @@ function NewPost() {
                 <UploadButton onPress={uploadFile}>
                     <UploadText>+</UploadText>
                     <Avatar
-                        source={{ uri: 'http://localhost:3333/files/' + imgPost }}
+                        source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + imgPost }}
                     />
                 </UploadButton>
             ) : (

@@ -169,7 +169,7 @@ function PostsList({ data, userId, refreshingLike }) {
         <Container>
             <Header onPress={() => navigation.navigate("PostsUser", { title: data.name })}>
                 {data.photo ? (
-                    <Avatar source={{ uri: 'http://localhost:3333/files/' + photo }} />
+                    <Avatar source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + photo }} />
                 ) : (
                     <Avatar source={require('../../assets/avatar.png')} />
                 )}
@@ -185,7 +185,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
             {data.imgPost ? (
                 <Banner
-                    source={{ uri: 'http://localhost:3333/files/' + data?.imgPost }}
+                    source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + data?.imgPost }}
                 />
             ) : (
                 <Empity></Empity>

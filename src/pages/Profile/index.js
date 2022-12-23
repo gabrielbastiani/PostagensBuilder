@@ -132,7 +132,7 @@ function Profile() {
                 <UploadButton onPress={() => uploadFile()}>
                     <UploadText>+</UploadText>
                     <Avatar
-                        source={{ uri: 'http://localhost:3333/files/' + photo }}
+                        source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + photo }}
                     />
                 </UploadButton>
             ) : (
