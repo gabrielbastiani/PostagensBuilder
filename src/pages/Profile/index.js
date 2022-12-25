@@ -28,10 +28,11 @@ function Profile() {
 
     let user_id = String(user.id);
 
+
     useEffect(() => {
         async function loadAvatar() {
             try {
-                const response = await api.get(`/userPhoto?user_id=${user_id}`);
+                const response = await api.get(`/userPhoto?name=${name}`);
             
                 setPhoto(response?.data.photo);
 
@@ -132,7 +133,7 @@ function Profile() {
                 <UploadButton onPress={() => uploadFile()}>
                     <UploadText>+</UploadText>
                     <Avatar
-                        source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + photo }}
+                        source={{ uri: 'http://192.168.0.147:3333/files/' + photo || photo }}
                     />
                 </UploadButton>
             ) : (
@@ -151,6 +152,8 @@ function Profile() {
             <Button bg="red" onPress={handleSignOut}>
                 <ButtonText color="white">Sair</ButtonText>
             </Button>
+
+
 
             <Modal visible={open} animationType="slide" transparent={true}>
                 <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>

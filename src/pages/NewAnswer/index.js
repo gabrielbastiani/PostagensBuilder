@@ -146,7 +146,7 @@ function NewAnswer() {
             <UploadButton onPress={() => uploadFile()}>
                 <UploadText>+</UploadText>
                 <Avatar
-                    source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + imgAnswer }}
+                    source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + imgAnswer }}
                 />
             </UploadButton>
             ) : (

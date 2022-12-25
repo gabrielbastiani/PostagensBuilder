@@ -30,11 +30,24 @@ function PostsList({ data, userId, refreshingLike }) {
     const navigation = useNavigation();
 
     const [likePost, setLikePost] = useState(data?.like);
-    /* const [likeAnswer, setLikeAnswer] = useState(data?.postresponde[0].like); */
+    const [photoUser, setPhotoUser] = useState('')
+    const [likeAnswer, setLikeAnswer] = useState(data?.postresponde.like);
     const [docIds, setDocIds] = useState('');
     const [docIdsAnswers, setDocIdsAnswers] = useState('');
 
     const post_id = data.id;
+
+    useEffect(() => {
+        async function loadPhtoUserPost() {
+            try {
+                const response = api.get(`/userPhoto?name=${data.name}`);
+                setPhotoUser((await response).data.photo);
+            } catch (error) {
+                return
+            }
+        }
+        loadPhtoUserPost();
+    }, []);
 
     useEffect(() => {
         async function loadDocId() {
@@ -152,8 +165,8 @@ function PostsList({ data, userId, refreshingLike }) {
         )
     }
 
-    function formatTimeAnswer() {
-        const dateAnswer = new Date(data.postresponde[0].created_at);
+    /* function formatTimeAnswer() {
+        const dateAnswer = new Date(data.postresponde.created_at);
 
         return formatDistance(
             new Date(),
@@ -162,14 +175,14 @@ function PostsList({ data, userId, refreshingLike }) {
                 locale: ptBR
             }
         )
-    }
+    } */
 
 
     return (
         <Container>
             <Header onPress={() => navigation.navigate("PostsUser", { title: data.name })}>
-                {data.photo ? (
-                    <Avatar source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + photo }} />
+                {photoUser ? (
+                    <Avatar source={{ uri: 'http://192.168.0.147:3333/files/' + photoUser }} />
                 ) : (
                     <Avatar source={require('../../assets/avatar.png')} />
                 )}
@@ -185,7 +198,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
             {data.imgPost ? (
                 <Banner
-                    source={{ uri: 'https://apipostagem.builderseunegocioonline.com.br/files/' + data?.imgPost }}
+                    source={{ uri: 'http://192.168.0.147:3333/files/' + data?.imgPost }}
                 />
             ) : (
                 <Empity></Empity>
@@ -209,17 +222,20 @@ function PostsList({ data, userId, refreshingLike }) {
                 </TimePost>
             </Actions>
 
+
+
+
             <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: post_id })}>
                 <TextButton>Responder</TextButton>
             </AnswerButton>
 
-            {/* <AnswerList>
+            <AnswerList>
                 <NameAnswer>
-                    {data?.postresponde[0].name}
+                    {data?.postresponde.name}
                 </NameAnswer>
 
                 <AnswerContent>
-                    {data?.postresponde[0].answer}
+                    {data?.postresponde.answer}
                 </AnswerContent>
 
                 <Actions>
@@ -236,10 +252,10 @@ function PostsList({ data, userId, refreshingLike }) {
                     </LikeButton>
 
                     <TimePost>
-                        {formatTimeAnswer()}
+                        {/* {formatTimeAnswer()} */}
                     </TimePost>
                 </Actions>
-            </AnswerList> */}
+            </AnswerList>
 
         </Container>
     );
