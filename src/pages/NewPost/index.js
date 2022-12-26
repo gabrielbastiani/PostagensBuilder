@@ -68,8 +68,6 @@ function NewPost() {
             data.append("name", name);
             data.append("description", description);
 
-            console.log(data)
-
             await api.post('/post', data, {
                 headers: {
                     "Content-Type": 'multipart/form-data',

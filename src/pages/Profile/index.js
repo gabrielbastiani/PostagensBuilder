@@ -81,21 +81,6 @@ function Profile() {
         })
     }
 
-    const getTypefile = (response) => {
-         // extrair e retornar o tipo da foto.
-        return response.assets[0].type;
-    }
-
-    const getFilename = (response) => {
-         // extrair e retornar o nome da foto.
-        return response.assets[0].fileName;
-    }
-
-    const getFileLocalPath = (response) => {
-        // extrair e retornar a url da foto.
-        return response.assets[0].uri;
-    }
-
     const uploadImageUser = async (response) => {
 
         const getFileLocalPath = (response) => {

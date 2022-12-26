@@ -28,7 +28,7 @@ import {
 } from './styles';
 import Hr from "react-native-hr-component";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { formatDistance } from 'date-fns';
+import { formatDistance, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { api } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
@@ -39,10 +39,8 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
     const navigation = useNavigation();
 
     const [likePost, setLikePost] = useState(data?.like);
-    const [likeAnswer, setLikeAnswer] = useState(Number(respostas[0]?.like));
     const [photoUser, setPhotoUser] = useState('');
 
-    const dateAnswers = respostas?.created_at;
     let answersAmaount = Number(respostas?.length) === 0;
     let totalAnswers = Number(respostas?.length);
 
@@ -77,7 +75,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
                 setLikePost(data?.like - 1);
 
-                refreshingLike()
+                refreshingLike();
 
                 return;
 
@@ -97,13 +95,11 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
             console.log(error.response.data);
         }
 
-        refreshingLike()
+        refreshingLike();
 
     }
 
-    async function handleLikeAnswer(id, like) {
-
-        console.log(like)
+    async function handleLikeAnswer(id) {
 
         let docIdResponde = `${userId}_${id}`;
 
@@ -118,9 +114,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
                 await api.delete(`/deleteDocAnswer?docIdResponde=${docIdResponde}`);
 
-                setLikeAnswer(like - 1);
-
-                refreshingLike()
+                refreshingLike();
 
                 return;
 
@@ -133,19 +127,17 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
             await api.put('/likeMoreAnswer', { postresponde_id: answerId });
 
-            setLikeAnswer(like + 1);
-
         } catch (error) {
             console.log(error.response.data);
         }
 
-        refreshingLike()
+        refreshingLike();
 
     }
 
 
     function formatTimePost() {
-        const datePost = new Date(data.created_at);
+        const datePost = new Date(data?.created_at);
 
         return formatDistance(
             new Date(),
@@ -156,8 +148,8 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
         )
     }
 
-    function formatTimeAnswer() {
-        const dateAnswer = new Date(dateAnswers);
+   /*  function formatTimeAnswer() {
+        const dateAnswer = new Date();
 
         return formatDistance(
             new Date(),
@@ -166,7 +158,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                 locale: ptBR
             }
         )
-    }
+    } */
 
 
     return (
@@ -219,7 +211,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                 {answersAmaount ? (
                     <EmpityAnswer></EmpityAnswer>
                 ) : (
-                    <Hr lineColor="black" width={1} text="Respostas abaixo" />
+                    <Hr lineColor="black" width={1} text="Respostas dessa postagem abaixo" />
                 )}
             </HeaderAnswer>
 
@@ -279,7 +271,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                             )}
 
                             <TimePost>
-                                {/* {formatTimeAnswer()} */}
+                                {formatDistance(subDays(new Date(item?.created_at), 0), new Date(), { addSuffix: true, locale: ptBR })}
                             </TimePost>
                         </Actions>
                     </AnswerList>

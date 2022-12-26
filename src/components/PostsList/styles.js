@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 
+
 export const Container = styled.View`
   margin-top: 8px;
   margin: 8px 2%;

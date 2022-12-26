@@ -86,6 +86,16 @@ function Home() {
         if(loading) return;
     } */
 
+    function renderItem({item}){
+            return <PostsList
+            keyExtractor={(item) => item.id}
+            data={item}
+            respostas={item.postresponde}
+            userId={user?.id}
+            refreshingLike={ () => handleRefreshLikes()}
+        />
+    }
+
     return (
         <Container>
             <Header />
@@ -98,14 +108,7 @@ function Home() {
                 <ListPost
                     showsVerticalScrollIndicator={false}
                     data={posts}
-                    renderItem={({ item }) => (
-                        <PostsList
-                            data={item}
-                            respostas={item.postresponde}
-                            userId={user?.id}
-                            refreshingLike={ () => handleRefreshLikes()}
-                        />
-                    )}
+                    renderItem={renderItem}
 
                     refreshing={loadingRefresh}
                     onRefresh={handleRefreshPosts}
