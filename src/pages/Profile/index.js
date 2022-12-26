@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, Text, Image, Modal, Platform } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { auth } from '../../contexts/auth';
+import mime from "mime";
 import {
     ButtonText,
     Button,
@@ -72,9 +73,9 @@ function Profile() {
                 console.log("Ops parece que deu algum erro")
             } else {
 
-                uploadImageUser(response);
-
                 setPhoto(response.assets[0].uri);
+
+                uploadImageUser(response);
 
             }
         })
@@ -97,20 +98,24 @@ function Profile() {
 
     const uploadImageUser = async (response) => {
 
+        const getFileLocalPath = (response) => {
+            // extrair e retornar a url da foto.
+            return response.assets[0].uri;
+        }
+
         const fileSource = getFileLocalPath(response);
-        const nameFile = getFilename(response);
-        const typeFile = getTypefile(response);
+
+        const newImageUri = "file:///" + fileSource.split("file:/").join("");
 
         try {
 
             const data = new FormData();
 
-            data.append("file",
-                {
-                    name: nameFile,
-                    type: typeFile,
-                    uri: fileSource
-                })
+            data.append('file', {
+                uri: newImageUri,
+                type: mime.getType(newImageUri),
+                name: newImageUri.split("/").pop()
+            });
 
             await api.put(`/photoUser?user_id=${user_id}`, data, {
                 headers: {

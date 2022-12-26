@@ -16,8 +16,17 @@ import {
     Banner,
     AnswerList,
     NameAnswer,
-    AnswerContent
+    AnswerContent,
+    BannerAnswer,
+    EmpityAnswer,
+    AvatarAnswer,
+    HeaderAnswer,
+    DivAvatar,
+    EmpityArea,
+    TextEmpity,
+    TextTotalAnswers
 } from './styles';
+import Hr from "react-native-hr-component";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { formatDistance } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -25,60 +34,38 @@ import { api } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
 
 
-function PostsList({ data, userId, refreshingLike }) {
+function PostsList({ data, respostas, userId, refreshingLike }) {
 
     const navigation = useNavigation();
 
     const [likePost, setLikePost] = useState(data?.like);
-    const [photoUser, setPhotoUser] = useState('')
-    const [likeAnswer, setLikeAnswer] = useState(data?.postresponde.like);
-    const [docIds, setDocIds] = useState('');
-    const [docIdsAnswers, setDocIdsAnswers] = useState('');
+    const [likeAnswer, setLikeAnswer] = useState(Number(respostas[0]?.like));
+    const [photoUser, setPhotoUser] = useState('');
 
-    const post_id = data.id;
+    const dateAnswers = respostas?.created_at;
+    let answersAmaount = Number(respostas?.length) === 0;
+    let totalAnswers = Number(respostas?.length);
+
 
     useEffect(() => {
         async function loadPhtoUserPost() {
             try {
                 const response = api.get(`/userPhoto?name=${data.name}`);
-                setPhotoUser((await response).data.photo);
+                setPhotoUser((await response)?.data.photo);
             } catch (error) {
-                return
+                return console.log(error);
             }
         }
         loadPhtoUserPost();
-    }, []);
-
-    useEffect(() => {
-        async function loadDocId() {
-            try {
-                const docId = `${userId}_${post_id}`;
-                const response = api.get(`/docIdFind?docId=${docId}`);
-                setDocIds((await response).data.docId);
-            } catch (error) {
-                return
-            }
-        }
-        loadDocId();
-    }, []);
-
-    useEffect(() => {
-        async function loadDocIdAnswer() {
-            try {
-                const docIdAnswer = `${userId}_${postresponde_id}`;
-                const response = api.get(`/docIdFindAnswer?docIdResponde=${docIdAnswer}`);
-                setDocIds((await response).data.docIdAnswer);
-            } catch (error) {
-                return
-            }
-        }
-        loadDocIdAnswer();
     }, []);
 
 
     async function handleLikePost(id) {
 
         let docId = `${userId}_${id}`;
+
+        const response = api.get(`/docIdFind?docId=${docId}`);
+        const docIds = ((await response)?.data?.docId);
 
         try {
 
@@ -88,7 +75,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
                 await api.delete(`/deleteDoc?docId=${docId}`);
 
-                setLikePost(data.like - 1);
+                setLikePost(data?.like - 1);
 
                 refreshingLike()
 
@@ -103,7 +90,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
             await api.put('/like', { post_id: id });
 
-            setLikePost(data.like + 1);
+            setLikePost(data?.like + 1);
 
 
         } catch (error) {
@@ -114,19 +101,24 @@ function PostsList({ data, userId, refreshingLike }) {
 
     }
 
-    async function handleLikeAnswer() {
+    async function handleLikeAnswer(id, like) {
 
-        let docIdResponde = `${userId}_${postresponde_id}`;
+        console.log(like)
+
+        let docIdResponde = `${userId}_${id}`;
+
+        const response = api.get(`/docIdFindAnswer?docIdResponde=${docIdResponde}`);
+        const docIdsAnswerss = ((await response)?.data?.docIdResponde);
 
         try {
 
-            if (docIdResponde == docIdsAnswers) {
+            if (docIdResponde == docIdsAnswerss) {
 
-                await api.put('/deslikeAnswer', { postresponde_id: postresponde_id });
+                await api.put('/deslikeAnswer', { postresponde_id: id });
 
                 await api.delete(`/deleteDocAnswer?docIdResponde=${docIdResponde}`);
 
-                setDocIdsAnswers(data.like - 1);
+                setLikeAnswer(like - 1);
 
                 refreshingLike()
 
@@ -135,14 +127,13 @@ function PostsList({ data, userId, refreshingLike }) {
             }
 
             const user_id = userId;
-            const post_id = id;
+            const answerId = id;
 
-            await api.post('/docId', { post_id: post_id, user_id: user_id, docId: docId });
+            await api.post('/docIdAnswer', { postresponde_id: answerId, user_id: user_id, docIdResponde: docIdResponde });
 
-            await api.put('/likeMoreAnswer', { post_id: id });
+            await api.put('/likeMoreAnswer', { postresponde_id: answerId });
 
-            setDocIdsAnswers(data.like + 1);
-
+            setLikeAnswer(like + 1);
 
         } catch (error) {
             console.log(error.response.data);
@@ -165,8 +156,8 @@ function PostsList({ data, userId, refreshingLike }) {
         )
     }
 
-    /* function formatTimeAnswer() {
-        const dateAnswer = new Date(data.postresponde.created_at);
+    function formatTimeAnswer() {
+        const dateAnswer = new Date(dateAnswers);
 
         return formatDistance(
             new Date(),
@@ -175,7 +166,7 @@ function PostsList({ data, userId, refreshingLike }) {
                 locale: ptBR
             }
         )
-    } */
+    }
 
 
     return (
@@ -198,8 +189,7 @@ function PostsList({ data, userId, refreshingLike }) {
 
             {data.imgPost ? (
                 <Banner
-                    source={{ uri: 'http://192.168.0.147:3333/files/' + data?.imgPost }}
-                />
+                    source={{ uri: 'http://192.168.0.147:3333/files/' + data?.imgPost }} />
             ) : (
                 <Empity></Empity>
             )}
@@ -213,8 +203,7 @@ function PostsList({ data, userId, refreshingLike }) {
                     <MaterialCommunityIcons
                         name={likePost === 0 ? 'heart-plus-outline' : 'cards-heart'}
                         size={20}
-                        color="#E52246"
-                    />
+                        color="#E52246" />
                 </LikeButton>
 
                 <TimePost>
@@ -222,41 +211,80 @@ function PostsList({ data, userId, refreshingLike }) {
                 </TimePost>
             </Actions>
 
-
-
-
-            <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: post_id })}>
+            <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: data?.id })}>
                 <TextButton>Responder</TextButton>
             </AnswerButton>
 
-            <AnswerList>
-                <NameAnswer>
-                    {data?.postresponde.name}
-                </NameAnswer>
+            <HeaderAnswer>
+                {answersAmaount ? (
+                    <EmpityAnswer></EmpityAnswer>
+                ) : (
+                    <Hr lineColor="black" width={1} text="Respostas abaixo" />
+                )}
+            </HeaderAnswer>
 
-                <AnswerContent>
-                    {data?.postresponde.answer}
-                </AnswerContent>
 
-                <Actions>
-                    <LikeButton
-                        onPress={() => handleLikeAnswer()}>
-                        <Like>
-                            {likeAnswer === 0 ? '' : likeAnswer}
-                        </Like>
-                        <MaterialCommunityIcons
-                            name={likeAnswer === 0 ? 'heart-plus-outline' : 'cards-heart'}
-                            size={17}
-                            color="#E52246"
-                        />
-                    </LikeButton>
 
-                    <TimePost>
-                        {/* {formatTimeAnswer()} */}
-                    </TimePost>
-                </Actions>
-            </AnswerList>
 
+            {respostas?.map((item) => {
+                return (
+                    <AnswerList key={item?.id}>
+                        {answersAmaount ? (
+                            <EmpityArea>
+                                <TextEmpity>Área das futuras respsotas!</TextEmpity>
+                            </EmpityArea>
+                        ) : (
+                            <TextTotalAnswers>Total de respsotas = {totalAnswers}</TextTotalAnswers>
+                        )}
+
+                        <AnswerContent>
+                            {answersAmaount ? (
+                                <EmpityAnswer></EmpityAnswer>
+                            ) : (
+                                <DivAvatar>
+                                    <AvatarAnswer source={{ uri: 'http://192.168.0.147:3333/files/' + photoUser }} />
+                                </DivAvatar>
+                            )}
+
+                            <NameAnswer numberOfLines={1}>
+                                {item?.name}
+                            </NameAnswer>
+                        </AnswerContent>
+
+                        <AnswerContent>
+                            {item?.answer}
+                        </AnswerContent>
+
+                        {item?.imgAnswer ? (
+                            <BannerAnswer
+                                source={{ uri: 'http://192.168.0.147:3333/files/' + item?.imgAnswer }} />
+                        ) : (
+                            <EmpityAnswer></EmpityAnswer>
+                        )}
+
+                        <Actions>
+                            {answersAmaount ? (
+                                <EmpityAnswer></EmpityAnswer>
+                            ) : (
+                                <LikeButton
+                                    onPress={() => handleLikeAnswer(item?.id, item?.like)} >
+                                    <Like>
+                                        {Number(item?.like) === 0 ? '' : Number(item?.like)}
+                                    </Like>
+                                    <MaterialCommunityIcons
+                                        name={Number(item?.like) === 0 ? 'heart-plus-outline' : 'cards-heart'}
+                                        size={17}
+                                        color="#E52246" />
+                                </LikeButton>
+                            )}
+
+                            <TimePost>
+                                {/* {formatTimeAnswer()} */}
+                            </TimePost>
+                        </Actions>
+                    </AnswerList>
+                )
+            })}
         </Container>
     );
 }

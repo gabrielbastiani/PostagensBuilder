@@ -60,12 +60,12 @@ export const TimePost = styled.Text`
 `;
 
 export const AnswerButton = styled.TouchableOpacity`
-    background-color: orange;
-    border-radius: 4px;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-    margin: 15px 0;
+  background-color: orange;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 15px 0;
 `;
 
 export const TextButton = styled.Text`
@@ -83,18 +83,81 @@ export const Banner = styled.Image`
   width: 300px;
   height: 140px;
   border-radius: 10px;
-  object-fit: cover;
+  object-fit: contain;
   margin: 25px 0;
 `;
 
 export const AnswerList = styled.View`
   display: flex;
+  margin-top: 8px;
+  margin: 8px 2%;
+  background-color: #bcbcbc;
+  border-radius: 8px;
+  box-shadow: 1px 1px 3px rgba(18, 18, 18, 0.2);
+  elevation: 3;
+  padding: 11px;
+  width: 300px;
 `;
 
 export const NameAnswer = styled.Text`
   color: black;
+  font-size: 13px;
 `;
 
 export const AnswerContent = styled.Text`
   color: black;
+  font-size: 12px;
+  margin: 8px 0;
+  align-items: center;
+`;
+
+export const EmpityAnswer = styled.View`
+  content: '';
+`;
+
+export const BannerAnswer = styled.Image`
+  width: 270px;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin: 25px 0;
+`;
+
+export const AvatarAnswer = styled.Image`
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  margin-right: 8px;
+`;
+
+export const HeaderAnswer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+`;
+
+export const DivAvatar = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const EmpityArea = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const TextTotalAnswers = styled.Text`
+  color: black;
+  font-size: 11px;
+`;
+
+export const TextEmpity = styled.Text`
+  color: black;
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: -85px;
+  margin-top: -15px;
 `;

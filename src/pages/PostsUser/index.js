@@ -68,7 +68,7 @@ function PostsUser() {
                 <ListPosts
                     showsVerticalScrollIndicator={false}
                     data={posts}
-                    renderItem={({ item }) => <PostsList data={item} userId={user?.id} />}
+                    renderItem={({ item }) => <PostsList data={item} respostas={item.postresponde} userId={user?.id} />}
                     refreshing={loadingRefresh}
                     onRefresh={handleRefreshLikes}
                 />

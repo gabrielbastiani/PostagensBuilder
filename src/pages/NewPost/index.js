@@ -68,6 +68,8 @@ function NewPost() {
             data.append("name", name);
             data.append("description", description);
 
+            console.log(data)
+
             await api.post('/post', data, {
                 headers: {
                     "Content-Type": 'multipart/form-data',
@@ -77,7 +79,7 @@ function NewPost() {
             alert('Post realizado no Feed!');
 
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data);
             alert('Erro ao postar!');
         }
 

@@ -53,7 +53,7 @@ function Home() {
 
         const allPosts = await api.get('/allPosts');
         
-        setPosts([])
+        setPosts([]);
 
         setPosts(allPosts.data);
         setLastItem(allPosts.data[1]);
@@ -67,7 +67,7 @@ function Home() {
 
         const allPosts = await api.get('/allPosts');
         
-        setPosts([])
+        setPosts([]);
 
         setPosts(allPosts.data);
         setLoading(false);
@@ -101,6 +101,7 @@ function Home() {
                     renderItem={({ item }) => (
                         <PostsList
                             data={item}
+                            respostas={item.postresponde}
                             userId={user?.id}
                             refreshingLike={ () => handleRefreshLikes()}
                         />
@@ -108,7 +109,6 @@ function Home() {
 
                     refreshing={loadingRefresh}
                     onRefresh={handleRefreshPosts}
-
                 />
             )}
 

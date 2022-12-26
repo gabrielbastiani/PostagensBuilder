@@ -5794,6 +5794,11 @@ react-native-gradle-plugin@^0.70.3:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz#cbcf0619cbfbddaa9128701aa2d7b4145f9c4fc8"
   integrity sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==
 
+react-native-hr-component@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-hr-component/-/react-native-hr-component-2.0.3.tgz#fcde35502eea4788a35357b7325a771e6fd39dff"
+  integrity sha512-cc+CLUm9o+YO09dk9a7Ix4zgA1QGc/xYs0CBsLPe254nkQMojmJQ9aC3muUtU8x0+usvTj35ICQLH6QulTiQgQ==
+
 react-native-image-picker@^4.10.2:
   version "4.10.2"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.10.2.tgz#75b356c9eea70c2c4f5c1089f8758e2fa32f88a8"

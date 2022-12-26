@@ -4,6 +4,7 @@ import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar,
 import { api } from '../../services/api';
 import { auth } from '../../contexts/auth';
 import { launchImageLibrary } from "react-native-image-picker";
+import mime from "mime";
 
 
 function NewAnswer() {
@@ -15,14 +16,13 @@ function NewAnswer() {
     const route = useRoute();
 
     let name = user.name;
-  
+
     const [postId, setPostId] = useState(route.params?.postId);
     const [answer, setAnswer] = useState("");
     const [imgAnswer, setImgAnswer] = useState(null);
-    const [post_id, setPost_id] = useState('');
 
 
-    const uploadFile = () => {
+    function uploadFile() {
         const options = {
             noData: true,
             mediaType: 'file'
@@ -35,11 +35,9 @@ function NewAnswer() {
                 console.log("Ops parece que deu algum erro")
             } else {
 
-                console.log(response.assets[0].uri)
-                
                 setImgAnswer(response.assets[0].uri);
 
-                handleAnswer(response)
+                handleAnswer(response);
 
             }
         })
@@ -48,49 +46,43 @@ function NewAnswer() {
 
     const handleAnswer = async (response) => {
 
-        const getTypefile = (response) => {
-            // extrair e retornar o tipo da foto.
-            return response.assets[0].type;
-        }
-    
-        const getFilename = (response) => {
-            // extrair e retornar o nome da foto.
-            return response.assets[0].fileName;
-        }
-    
         const getFileLocalPath = (response) => {
             // extrair e retornar a url da foto.
             return response.assets[0].uri;
         }
 
         const fileSource = getFileLocalPath(response);
-        const nameFile = getFilename(response);
-        const typeFile = getTypefile(response);
+
+        const newImageUri = "file:///" + fileSource.split("file:/").join("");
 
         try {
 
             const data = new FormData();
 
-            data.append("file",
-                {
-                    name: nameFile,
-                    type: typeFile,
-                    uri: fileSource
-                });
+            if (answer === '') {
+                alert('Ops!!! Escreva alguma legenda para sua imagem!');
+                return;
+            }
+
+            data.append('file', {
+                uri: newImageUri,
+                type: mime.getType(newImageUri),
+                name: newImageUri.split("/").pop()
+            });
             data.append("name", name);
             data.append("answer", answer);
             data.append("post_id", postId);
 
-            await api.post('/answer', data), {
+            await api.post('/answer', data, {
                 headers: {
                     "Content-Type": 'multipart/form-data',
                 }
-            }
+            })
 
             alert('Resposta realizada!');
 
         } catch (error) {
-            console.log(error);
+            console.log(error.response.data);
             alert('Erro ao postar!');
         }
 
@@ -98,6 +90,8 @@ function NewAnswer() {
         navigation.goBack();
 
     }
+
+    
 
     async function handlePostText(event) {
         event.preventDefault();
@@ -143,14 +137,14 @@ function NewAnswer() {
             <TextInfo>Insira imagem abaixo se desejar</TextInfo>
 
             {imgAnswer ? (
-            <UploadButton onPress={() => uploadFile()}>
-                <UploadText>+</UploadText>
-                <Avatar
-                    source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + imgAnswer }}
-                />
-            </UploadButton>
+                <UploadButton onPress={uploadFile}>
+                    <UploadText>+</UploadText>
+                    <Avatar
+                        source={{ uri: imgAnswer }}
+                    />
+                </UploadButton>
             ) : (
-                <UploadButton onPress={() => uploadFile()}>
+                <UploadButton onPress={uploadFile}>
                     <UploadText>+</UploadText>
                 </UploadButton>
             )}
