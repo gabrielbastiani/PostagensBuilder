@@ -11,17 +11,29 @@ function Search() {
     const [input, setInput] = useState('');
     const [users, setUsers] = useState([]);
 
-
     useEffect(() => {
         async function fetchusers() {
             if (input === '' || input === undefined) {
                 setUsers([]);
                 return;
             }
-            const allUsers = await api.get(`/postsUser?name=${'name', '>=', input || 'name', '<=', input}`);
-            setUsers(allUsers?.data);
+            const allUsers = await api.get(`/postsUser?name=${input}`);
+
+            const usersAll = allUsers?.data;
+
+                const listUsers = [];
+
+                const filterName = usersAll.filter((filt) => filt.name.toLowerCase().includes());
+                filterName.forEach(filt => { 
+                    console.log(filt.name);
+                });
+
+            setUsers(listUsers);
+
         }
+        
         fetchusers();
+
     }, [input]);
 
 
