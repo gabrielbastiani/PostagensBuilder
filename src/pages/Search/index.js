@@ -8,33 +8,30 @@ import SearchList from "../../components/SearchList";
 
 function Search() {
 
-    const [input, setInput] = useState('');
-    const [users, setUsers] = useState([]);
+    const [results, setResults] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [list, setList] = useState(results);
 
     useEffect(() => {
-        async function fetchusers() {
-            if (input === '' || input === undefined) {
-                setUsers([]);
-                return;
-            }
-            const allUsers = await api.get(`/postsUser?name=${input}`);
-
-            const usersAll = allUsers?.data;
-
-                const listUsers = [];
-
-                const filterName = usersAll.filter((filt) => filt.name.toLowerCase().includes());
-                filterName.forEach(filt => { 
-                    console.log(filt.name);
-                });
-
-            setUsers(listUsers);
-
+        async function allUsers() {
+            const { data } = await api.get(`/allUsers`);
+            setResults(data);
         }
-        
-        fetchusers();
+        allUsers();
+    }, []);
 
-    }, [input]);
+    useEffect(() => {
+        if (searchText === '') {
+            setList([]);
+        } else {
+            setList(
+                results.filter(
+                    (item) =>
+                        item.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+                )
+            );
+        }
+    }, [searchText]);
 
 
     return (
@@ -47,14 +44,15 @@ function Search() {
                 />
                 <Input
                     placeholder="Procurando alguem?"
-                    value={input}
-                    onChangeText={(text) => setInput(text)}
+                    value={searchText}
+                    onChangeText={(t) => setSearchText(t)}
                 />
             </AreaInput>
 
             <List
-                data={users}
-                renderItem={ ({item}) => <SearchList data={item} /> }
+                data={list}
+                renderItem={({ item }) => <SearchList data={item} />}
+                keyExtractor={(item) => item.id}
             />
 
         </Container>

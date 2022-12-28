@@ -81,8 +81,8 @@ export const Empity = styled.View`
 `;
 
 export const Banner = styled.Image`
-  width: 300px;
-  height: 140px;
+  width: 350px;
+  height: 220px;
   border-radius: 10px;
   object-fit: contain;
   margin: 25px 0;
@@ -103,6 +103,7 @@ export const AnswerList = styled.View`
 export const NameAnswer = styled.Text`
   color: black;
   font-size: 13px;
+  margin-top: -50px;
 `;
 
 export const AnswerContent = styled.Text`
@@ -118,7 +119,7 @@ export const EmpityAnswer = styled.View`
 
 export const BannerAnswer = styled.Image`
   width: 270px;
-  height: 140px;
+  height: 190px;
   border-radius: 10px;
   object-fit: cover;
   margin: 25px 0;

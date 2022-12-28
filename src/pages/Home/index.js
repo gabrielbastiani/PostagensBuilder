@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import { api } from "../../services/api";
 import { auth } from "../../contexts/auth";
 import { View, Text, ActivityIndicator } from "react-native";
@@ -16,35 +16,42 @@ function Home() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingRefresh, setLoadingRefresh] = useState(false);
-    const [lastItem, setLastItem] = useState('');
-    const [emptyList, setEmptyList] = useState(false);
+
+    const [total, setTotal] = useState(0);
+    const [pages, setPages] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit, setLimit] = useState(7);
 
 
-    useFocusEffect(
-        useCallback(() => {
-            let isActive = true;
+    async function loadPosts() {
 
-            async function fetchPosts() {
-                const allPosts = await api.get('/allPosts');
+        if(!loading) return;
+        setLoading(true);
 
-                if (isActive) {
-                    setPosts([])
-                }
+        try {
+            const { data } = await api.get(`/pagePost?page=${currentPage}&limit=${limit}`);
 
-                setEmptyList(!!allPosts.data === null)
-                setPosts(allPosts.data);
-                setLastItem(allPosts.data[1]);
-                setLoading(false);
-            }
+            /* setTotal(data?.total);
+            const totalPages = Math.ceil(total / limit);
 
-            fetchPosts();
+            const arrayPages = [];
+            for (let i = 1; i <= totalPages; i++) {
+                arrayPages.push(i);
+            } */
 
-            return () => {
-                isActive = false;
-            }
+            setPosts([...posts, ...data?.postsall]);
+            setCurrentPage(currentPage + 1);
 
-        }, [])
-    )
+            setLoading(false);
+
+        } catch (error) {
+            console.error(error.response.data);
+        }
+    }
+
+    useEffect(() => {
+        loadPosts();
+    }, []);
 
 
     // Buscar mais posts quando puxar sua lista para cima.
@@ -52,11 +59,10 @@ function Home() {
         setLoadingRefresh(true);
 
         const allPosts = await api.get('/allPosts');
-        
+
         setPosts([]);
 
         setPosts(allPosts.data);
-        setLastItem(allPosts.data[1]);
         setLoading(false);
 
         setLoadingRefresh(false);
@@ -66,7 +72,7 @@ function Home() {
         setLoadingRefresh(true);
 
         const allPosts = await api.get('/allPosts');
-        
+
         setPosts([]);
 
         setPosts(allPosts.data);
@@ -75,25 +81,23 @@ function Home() {
         setLoadingRefresh(false);
     }
 
-    // Buscar mais posts ao chegar no final da lista
-    /* async function getListPosts(){
-        if(emptyList){
-            // Se buscou toda sua lista tiramos o loading
-            setLoading(false);
-            return null;
-        }
-        
-        if(loading) return;
-    } */
 
-    function renderItem({item}){
-            return <PostsList
+    function renderItem({ item }) {
+        return <PostsList
             keyExtractor={(item) => item.id}
             data={item}
-            respostas={item.postresponde}
+            respostas={item?.postresponde}
             userId={user?.id}
-            refreshingLike={ () => handleRefreshLikes()}
+            refreshingLike={() => handleRefreshLikes()}
         />
+    }
+
+    function LoadingFooter(loadingFooter) {
+        if (loadingFooter) {
+            return <ActivityIndicator size={'large'} color='orange' />;
+        }
+
+        return null;
     }
 
     return (
@@ -109,6 +113,9 @@ function Home() {
                     showsVerticalScrollIndicator={false}
                     data={posts}
                     renderItem={renderItem}
+                    onEndReached={loadPosts}
+                    onEndReachedThreshold={0.1}
+                    ListFooterComponent={<LoadingFooter loadingFooter={loading} />}
 
                     refreshing={loadingRefresh}
                     onRefresh={handleRefreshPosts}

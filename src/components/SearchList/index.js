@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Name } from "./styles";
+import { Container, Name, Avatar } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 
 function SearchList({ data }){
@@ -8,7 +8,17 @@ function SearchList({ data }){
 
     return(
         <Container onPress={ () => navigation.navigate("PostsUser", { title: data.name })}>
-            <Name>{data.name}</Name>
+            {data?.photo ? (
+                    <Avatar source={{ uri: 'http://192.168.0.147:3333/files/' + data?.photo }} />
+                ) : (
+                    <Avatar source={require('../../assets/avatar.png')} />
+                )} 
+            <Name>
+                {data?.name}
+                {'\n'}
+                {data?.email}
+            </Name>
+            
         </Container>
     )
 }

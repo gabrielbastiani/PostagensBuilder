@@ -5,6 +5,15 @@ export const Container = styled.TouchableOpacity`
   background-color: #222227;
   padding: 10px;
   border-radius: 4px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const Avatar = styled.Image`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-right: 13px;
 `;
 
 export const Name = styled.Text`

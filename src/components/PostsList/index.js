@@ -148,18 +148,6 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
         )
     }
 
-   /*  function formatTimeAnswer() {
-        const dateAnswer = new Date();
-
-        return formatDistance(
-            new Date(),
-            dateAnswer,
-            {
-                locale: ptBR
-            }
-        )
-    } */
-
 
     return (
         <Container>
@@ -199,11 +187,11 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                 </LikeButton>
 
                 <TimePost>
-                    {formatTimePost()}
+                   {formatTimePost()}
                 </TimePost>
             </Actions>
 
-            <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: data?.id })}>
+            <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: data?.id, refreshAnswer: refreshingLike })}>
                 <TextButton>Responder</TextButton>
             </AnswerButton>
 
@@ -229,12 +217,12 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                             <TextTotalAnswers>Total de respsotas = {totalAnswers}</TextTotalAnswers>
                         )}
 
-                        <AnswerContent>
+                        <AnswerContent onPress={() => navigation.navigate("PostsUser", { title: item?.name })}>
                             {answersAmaount ? (
                                 <EmpityAnswer></EmpityAnswer>
                             ) : (
                                 <DivAvatar>
-                                    <AvatarAnswer source={{ uri: 'http://192.168.0.147:3333/files/' + photoUser }} />
+                                    <AvatarAnswer source={{ uri: 'http://192.168.0.147:3333/files/' + item?.name?.photo }} />
                                 </DivAvatar>
                             )}
 
