@@ -57,7 +57,6 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
         loadPhtoUserPost();
     }, []);
 
-
     async function handleLikePost(id) {
 
         let docId = `${userId}_${id}`;

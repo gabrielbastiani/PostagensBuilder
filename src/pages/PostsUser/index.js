@@ -12,7 +12,7 @@ function PostsUser() {
     const route = useRoute();
     const navigation = useNavigation();
     const { user } = useContext(auth);
-    const [title, setTitle] = useState(route.params?.title);
+    const [title, setTitle] = useState(route?.params?.title);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingRefresh, setLoadingRefresh] = useState(false);
@@ -33,7 +33,7 @@ function PostsUser() {
                 const allPosts = await api.get(`/postsUser?name=${title}`);
 
                 if (isActive) {
-                    setPosts(allPosts.data);
+                    setPosts(allPosts?.data);
                     setLoading(false);
                 }
 
@@ -52,7 +52,7 @@ function PostsUser() {
 
         const allPosts = await api.get(`/postsUser?name=${title}`);
 
-        setPosts(allPosts.data);
+        setPosts(allPosts?.data);
         setLoading(false);
 
         setLoadingRefresh(false);

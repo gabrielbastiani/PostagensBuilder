@@ -17,57 +17,50 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [loadingRefresh, setLoadingRefresh] = useState(false);
 
-    const [total, setTotal] = useState(0);
-    const [pages, setPages] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(7);
+    const [limit, setLimit] = useState(5);
 
+
+    useEffect(() => {
+        loadPosts();
+    }, []);
 
     async function loadPosts() {
 
-        if(!loading) return;
-        setLoading(true);
+        let isActive = true;
 
         try {
             const { data } = await api.get(`/pagePost?page=${currentPage}&limit=${limit}`);
 
-            /* setTotal(data?.total);
-            const totalPages = Math.ceil(total / limit);
+            if (isActive) {
+                setPosts([...posts, ...data?.postsall]);
+                setCurrentPage(currentPage + 1);
+                setLoading(false);
+            }
 
-            const arrayPages = [];
-            for (let i = 1; i <= totalPages; i++) {
-                arrayPages.push(i);
-            } */
-
-            setPosts([...posts, ...data?.postsall]);
-            setCurrentPage(currentPage + 1);
-
-            setLoading(false);
+            return () => {
+                isActive = false;
+            }
 
         } catch (error) {
             console.error(error.response.data);
         }
     }
 
-    useEffect(() => {
-        loadPosts();
-    }, []);
-
-
     // Buscar mais posts quando puxar sua lista para cima.
     async function handleRefreshPosts() {
         setLoadingRefresh(true);
 
-        const allPosts = await api.get('/allPosts');
+        const { data } = await api.get(`/pagePost?page=${currentPage}&limit=${limit}`);
 
-        setPosts([]);
-
-        setPosts(allPosts.data);
+        setPosts([...posts, ...data?.postsall]);
+        setCurrentPage(currentPage + 1);
         setLoading(false);
 
         setLoadingRefresh(false);
     }
 
+    // Refresh apos dar o like no post.
     async function handleRefreshLikes() {
         setLoadingRefresh(true);
 
@@ -115,7 +108,7 @@ function Home() {
                     renderItem={renderItem}
                     onEndReached={loadPosts}
                     onEndReachedThreshold={0.1}
-                    ListFooterComponent={<LoadingFooter loadingFooter={loading} />}
+                    ListFooterComponent={<LoadingFooter loadingFooter={LoadingFooter} />}
 
                     refreshing={loadingRefresh}
                     onRefresh={handleRefreshPosts}
