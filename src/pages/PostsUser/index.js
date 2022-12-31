@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useCallback, useContext } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { api } from "../../services/api";
 import { auth } from '../../contexts/auth';

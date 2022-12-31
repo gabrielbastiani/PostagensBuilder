@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar, Text } from './styles';
 import { api } from '../../services/api';

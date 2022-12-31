@@ -150,7 +150,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
     return (
         <Container>
-            <Header onPress={() => navigation.navigate("PostsUser", { title: data.name })}>
+            <Header onPress={() => navigation.navigate("PostsUser", { title: data?.name })}>
                 {photoUser ? (
                     <Avatar source={{ uri: 'http://192.168.0.147:3333/files/' + photoUser }} />
                 ) : (
@@ -190,7 +190,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                 </TimePost>
             </Actions>
 
-            <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: data?.id, refreshAnswer: refreshingLike })}>
+            <AnswerButton onPress={() => navigation.navigate("NewAnswer", { postId: data?.id })}>
                 <TextButton>Responder</TextButton>
             </AnswerButton>
 
@@ -217,11 +217,11 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                         )}
 
                         <AnswerContent onPress={() => navigation.navigate("PostsUser", { title: item?.name })}>
-                            {answersAmaount ? (
-                                <EmpityAnswer></EmpityAnswer>
+                            {item?.photo ? (
+                                <AvatarAnswer source={{ uri: 'http://192.168.0.147:3333/files/' + item?.photo }} />
                             ) : (
                                 <DivAvatar>
-                                    <AvatarAnswer source={{ uri: 'http://192.168.0.147:3333/files/' + item?.name?.photo }} />
+                                    <Avatar source={require('../../assets/avatar.png')} />
                                 </DivAvatar>
                             )}
 

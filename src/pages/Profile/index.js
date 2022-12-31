@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, Image, Modal, Platform } from "react-native";
+import { Modal, Platform } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { auth } from '../../contexts/auth';
 import mime from "mime";

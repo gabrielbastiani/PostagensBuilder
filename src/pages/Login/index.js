@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Text, ActivityIndicator } from 'react-native';
 import { api } from '../../services/api';
 import { auth } from '../../contexts/auth';
+import * as Animatable from 'react-native-animatable';
+const LogoAnimated = Animatable.createAnimatableComponent(Logo)
 
 
 function Login() {
@@ -41,6 +43,7 @@ function Login() {
     }
 
     await signIn({ email, password });
+    
   }
 
   async function handleSignUp(event) {
@@ -73,7 +76,7 @@ function Login() {
     return (
       <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
 
-        <Logo source={require('../../assets/Logo.png')} />
+        <LogoAnimated animation="flipInY" source={require('../../assets/Logo.png')} />
 
         <TextApp>
           <Text>Rede Social Builder</Text>
@@ -93,6 +96,7 @@ function Login() {
           autoCapitalize="none"
           value={password}
           onChangeText={setPassword}
+          secureTextEntry={true}
         />
 
         <Button onPress={handleSignIn}>
@@ -119,7 +123,7 @@ function Login() {
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
-      <Logo source={require('../../assets/Logo.png')} />
+      <LogoAnimated animation="flipInY" source={require('../../assets/Logo.png')} />
 
       <TextApp>
         <Text>Rede Social Builder</Text>
@@ -147,6 +151,7 @@ function Login() {
         autoCapitalize="none"
         value={password}
         onChangeText={setPassword}
+        secureTextEntry={true}
       />
 
       <Button onPress={handleSignUp}>

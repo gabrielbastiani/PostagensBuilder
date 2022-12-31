@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Container, Input, Button, ButtonText, UploadButton, UploadText, Avatar, TextInfo } from './styles';
 import { api } from '../../services/api';
@@ -15,12 +15,25 @@ function NewAnswer() {
 
     const route = useRoute();
 
-    let name = user.name;
+    let name = String(user?.name);
 
     const [postId, setPostId] = useState(route.params?.postId);
     const [answer, setAnswer] = useState("");
     const [imgAnswer, setImgAnswer] = useState(null);
+    const [photoUser, setPhotoUser] = useState('');
 
+
+    useEffect(() => {
+        async function loadPhtoUserPost() {
+            try {
+                const response = api.get(`/userPhoto?name=${name}`);
+                setPhotoUser((await response)?.data?.photo);
+            } catch (error) {
+                return console.log(error);
+            }
+        }
+        loadPhtoUserPost();
+    }, []);
 
     function uploadFile() {
         const options = {
@@ -70,6 +83,7 @@ function NewAnswer() {
                 name: newImageUri.split("/").pop()
             });
             data.append("name", name);
+            data.append("photo", photoUser);
             data.append("answer", answer);
             data.append("post_id", postId);
 
@@ -102,7 +116,7 @@ function NewAnswer() {
                 return;
             }
 
-            await api.post('/postAnswer', { name: name, answer: answer, post_id: postId });
+            await api.post('/postAnswer', { name: name, photo: photoUser, answer: answer, post_id: postId });
 
             alert('Resposta realizada!');
 

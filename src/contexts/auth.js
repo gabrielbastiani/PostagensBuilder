@@ -70,6 +70,7 @@ export function AuthProvider({ children }){
             setLoadingAuth(false)
         }catch(err){
             console.log('erro ao acessar', err)
+            alert("EMAIL OU SENHA ERRADA!!!")
             setLoadingAuth(false)
         }
     }

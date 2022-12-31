@@ -1,8 +1,8 @@
-import React, { useState, useContext, useCallback, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { api } from "../../services/api";
 import { auth } from "../../contexts/auth";
-import { View, Text, ActivityIndicator } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { View, ActivityIndicator } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import Feather from 'react-native-vector-icons/Feather';
 import { Container, ButtonPost, ListPost } from './styles';
 import Header from "../../components/Header";
@@ -51,10 +51,11 @@ function Home() {
     async function handleRefreshPosts() {
         setLoadingRefresh(true);
 
-        const { data } = await api.get(`/pagePost?page=${currentPage}&limit=${limit}`);
+        const allPosts = await api.get('/allPosts');
 
-        setPosts([...posts, ...data?.postsall]);
-        setCurrentPage(currentPage + 1);
+        setPosts([]);
+
+        setPosts(allPosts.data);
         setLoading(false);
 
         setLoadingRefresh(false);

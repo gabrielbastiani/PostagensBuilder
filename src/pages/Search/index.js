@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
 import { api } from '../../services/api';
 import { Container, AreaInput, Input, List } from "./styles";
 import Feather from 'react-native-vector-icons/Feather';
