@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     Container,
     Name,
@@ -24,7 +24,19 @@ import {
     DivAvatar,
     EmpityArea,
     TextEmpity,
-    TextTotalAnswers
+    TextTotalAnswers,
+    ModalContainer,
+    ButtonBack,
+    ButtonText,
+    TextAviso,
+    Button,
+    Delete,
+    TextDelete,
+    Edit,
+    EditDescription,
+    Input,
+    EditAnswer,
+    EditAnswerText
 } from './styles';
 import Hr from "react-native-hr-component";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -32,14 +44,24 @@ import { formatDistance, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { api } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
+import { Modal, Platform } from "react-native";
+import Feather from 'react-native-vector-icons/Feather';
+import { auth } from "../../contexts/auth";
 
 
 function PostsList({ data, respostas, userId, refreshingLike }) {
 
+    const { user } = useContext(auth);
     const navigation = useNavigation();
 
     const [likePost, setLikePost] = useState(data?.like);
     const [photoUser, setPhotoUser] = useState('');
+    const [open, setOpen] = useState(false);
+    const [openAnswer, setOpenAnswer] = useState(false);
+    const [openDescription, setOpenDescription] = useState(false);
+    const [description, setDescription] = useState(data?.description);
+    const [openAnswerEdit, setOpenAnswerEdit] = useState(false);
+    const [answer, setAnswer] = useState('');
 
     let answersAmaount = Number(respostas?.length) === 0;
     let totalAnswers = Number(respostas?.length);
@@ -134,7 +156,6 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
     }
 
-
     function formatTimePost() {
         const datePost = new Date(data?.created_at);
 
@@ -145,6 +166,98 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                 locale: ptBR
             }
         )
+    }
+
+    async function handleDelete(id) {
+        try {
+            if (data.name === user.name) {
+
+                await api.delete(`/deletePost?post_id=${id}`);
+
+                alert("POST DELETADO COM SUCESSO!!!");
+
+                refreshingLike();
+
+                setOpen(false);
+
+                return;
+
+            } else {
+                alert("ESSE POST NÃO É SEU, NÃO PODE DELETAR!!!");
+                setOpen(false);
+            }
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+
+    async function handleDeleteAnswer(id, name) {
+        try {
+            if (name === user.name) {
+
+                await api.delete(`/deleteAnswer?postresponde_id=${id}`);
+
+                alert("RESPOSTA DELETADA COM SUCESSO!!!");
+
+                refreshingLike();
+
+                setOpenAnswer(false);
+
+                return;
+
+            } else {
+                alert("ESSA RESPOSTA NÃO É SUA, NÃO PODE DELETAR!!!");
+                setOpenAnswer(false);
+            }
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+
+    async function handleEditDescription(id) {
+        try {
+            if (data.name === user.name) {
+
+                await api.put(`/descriptionUpdate?post_id=${id}`, { description: description });
+
+                alert("TEXTO DA POSTAGEM EDITADO COM SUCESSO!!!");
+
+                refreshingLike();
+
+                setOpenDescription(false);
+
+                return;
+
+            } else {
+                alert("ESSA POSTAGEM NÃO É SUA PARA QUE POSSA EDITAR!!!");
+                setOpenDescription(false);
+            }
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+
+    async function handleEditAnswer(id, name) {
+        try {
+            if (name === user.name) {
+
+                await api.put(`/answerDesc?postresponde_id=${id}`, { answer: answer });
+
+                alert("TEXTO DA RESPOSTA EDITADO COM SUCESSO!!!");
+
+                refreshingLike();
+
+                setOpenAnswer(false);
+
+                return;
+
+            } else {
+                alert("ESSA RESPOSTA NÃO É SUA PARA QUE POSSA EDITAR!!!");
+                setOpenAnswer(false);
+            }
+        } catch (error) {
+            console.log(error.response.data);
+        }
     }
 
 
@@ -165,6 +278,19 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
             <ContentView>
                 <Content>{data?.description}</Content>
             </ContentView>
+            
+            {data?.name === user?.name ? (
+                <EditDescription onPress={() => setOpenDescription(true)}>
+                    <MaterialCommunityIcons
+                        name={'file-edit-outline'}
+                        size={18}
+                        color="#E52246"
+                    />
+                    <Edit>Editar texto...</Edit>
+                </EditDescription>
+            ) : (
+                <Empity></Empity>
+            )}
 
             {data.imgPost ? (
                 <Banner
@@ -185,8 +311,21 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                         color="#E52246" />
                 </LikeButton>
 
+                {data?.name === user?.name ? (
+                    <Delete onPress={() => setOpen(true)}>
+                        <MaterialCommunityIcons
+                            name={'delete'}
+                            size={22}
+                            color="#E52246"
+                        />
+                        <TextDelete>Deletar</TextDelete>
+                    </Delete>
+                ) : (
+                    <Empity></Empity>
+                )}
+
                 <TimePost>
-                   {formatTimePost()}
+                    {formatTimePost()}
                 </TimePost>
             </Actions>
 
@@ -234,6 +373,19 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                             {item?.answer}
                         </AnswerContent>
 
+                        {item?.name === user?.name ? (
+                            <EditAnswer onPress={() => setOpenAnswerEdit(true)}>
+                                <MaterialCommunityIcons
+                                    name={'file-edit-outline'}
+                                    size={16}
+                                    color="#E52246"
+                                />
+                                <EditAnswerText>Editar texto...</EditAnswerText>
+                            </EditAnswer>
+                        ) : (
+                            <Empity></Empity>
+                        )}
+
                         {item?.imgAnswer ? (
                             <BannerAnswer
                                 source={{ uri: 'http://192.168.0.147:3333/files/' + item?.imgAnswer }} />
@@ -257,13 +409,120 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
                                 </LikeButton>
                             )}
 
+                            {item?.name === user?.name ? (
+                                <Delete onPress={() => setOpenAnswer(true)}>
+                                    <MaterialCommunityIcons
+                                        name={'delete'}
+                                        size={17}
+                                        color="#E52246"
+                                    />
+                                    <TextDelete>Deletar</TextDelete>
+                                </Delete>
+                            ) : (
+                                <Empity></Empity>
+                            )}
+
                             <TimePost>
                                 {formatDistance(subDays(new Date(item?.created_at), 0), new Date(), { addSuffix: true, locale: ptBR })}
                             </TimePost>
                         </Actions>
+
+                        <Modal visible={openAnswer} animationType="slide" transparent={true}>
+                            <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>
+                                <ButtonBack onPress={() => setOpenAnswer(false)}>
+                                    <Feather
+                                        name="arrow-left"
+                                        size={22}
+                                        color="#121212"
+                                    />
+                                    <ButtonText color="#121212">Voltar</ButtonText>
+                                </ButtonBack>
+
+                                <TextAviso>Você deseja mesmo deletar essa resposta?</TextAviso>
+
+                                <Button bg="red" onPress={() => handleDeleteAnswer(item?.id, item?.name)}>
+                                    <ButtonText color="#FFF">Deletar Resposta</ButtonText>
+                                </Button>
+
+
+                            </ModalContainer>
+                        </Modal>
+
+                        <Modal visible={openAnswerEdit} animationType="slide" transparent={true}>
+                            <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>
+                                <ButtonBack onPress={() => setOpenAnswerEdit(false)}>
+                                    <Feather
+                                        name="arrow-left"
+                                        size={22}
+                                        color="#121212"
+                                    />
+                                    <ButtonText color="#121212">Voltar</ButtonText>
+                                </ButtonBack>
+
+                                <TextAviso>Edite abaixo o texto da sua resposta se desejar</TextAviso>
+
+                                <Input
+                                    placeholder={item?.answer}
+                                    value={answer}
+                                    onChangeText={(text) => setAnswer(text)}
+                                />
+
+                                <Button bg="red" onPress={() => handleEditAnswer(item?.id, item?.name, item?.answer)}>
+                                    <ButtonText color="#FFF">Salvar edição</ButtonText>
+                                </Button>
+                            </ModalContainer>
+                        </Modal>
                     </AnswerList>
                 )
             })}
+
+
+
+
+            <Modal visible={open} animationType="slide" transparent={true}>
+                <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>
+                    <ButtonBack onPress={() => setOpen(false)}>
+                        <Feather
+                            name="arrow-left"
+                            size={22}
+                            color="#121212"
+                        />
+                        <ButtonText color="#121212">Voltar</ButtonText>
+                    </ButtonBack>
+
+                    <TextAviso>Você deseja mesmo deletar esse post?</TextAviso>
+
+                    <Button bg="red" onPress={() => handleDelete(data.id)}>
+                        <ButtonText color="#FFF">Deletar</ButtonText>
+                    </Button>
+                </ModalContainer>
+            </Modal>
+
+            <Modal visible={openDescription} animationType="slide" transparent={true}>
+                <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>
+                    <ButtonBack onPress={() => setOpenDescription(false)}>
+                        <Feather
+                            name="arrow-left"
+                            size={22}
+                            color="#121212"
+                        />
+                        <ButtonText color="#121212">Voltar</ButtonText>
+                    </ButtonBack>
+
+                    <TextAviso>Edite abaixo o texto da sua postagem se desejar</TextAviso>
+
+                    <Input
+                        placeholder={data?.description}
+                        value={description}
+                        onChangeText={(text) => setDescription(text)}
+                    />
+
+                    <Button bg="red" onPress={() => handleEditDescription(data.id)}>
+                        <ButtonText color="#FFF">Salvar edição</ButtonText>
+                    </Button>
+                </ModalContainer>
+            </Modal>
+
         </Container>
     );
 }

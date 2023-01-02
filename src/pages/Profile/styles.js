@@ -92,3 +92,8 @@ export const Input = styled.TextInput`
   color: #121212;
   text-align: center;
 `;
+
+export const TextDelete = styled.Text`
+  color: black;
+  font-size: 18px;
+`;

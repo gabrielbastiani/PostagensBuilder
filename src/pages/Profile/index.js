@@ -14,7 +14,8 @@ import {
     Avatar,
     ModalContainer,
     ButtonBack,
-    Input
+    Input,
+    TextDelete
 } from "./styles";
 import Feather from 'react-native-vector-icons/Feather';
 import { api } from "../../services/api";
@@ -26,6 +27,7 @@ function Profile() {
     const [name, setName] = useState(user?.name);
     const [photo, setPhoto] = useState(null);
     const [open, setOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
 
     let user_id = String(user.id);
 
@@ -57,7 +59,8 @@ function Profile() {
             return;
         }
         await api.put(`/nameUpdate?user_id=${user_id}`, { name });
-        handleSignOut();
+        alert("NOME DO ÚSUARIO ATUALIZADO COM SUCESSO!!!");
+        setOpen(false);
     }
 
     const uploadFile = () => {
@@ -114,11 +117,25 @@ function Profile() {
 
     }
 
+    async function handleDeleteUser(){
+        try {
+            await api.delete(`/deleteUser?user_id=${user_id}`);
+
+            alert("ÚSUARIO DELETADO COM SUCESSO!!!");
+            
+        } catch (error) {
+            console.log(error.response.data);
+            alert("ÚSUARIO NÃO FOI DELETADO... DEU ALGUM PROBLEMA!!!");
+        }
+
+        handleSignOut();
+
+    }
+
 
 
     return (
         <Container>
-
             {photo ? (
                 <UploadButton onPress={() => uploadFile()}>
                     <UploadText>+</UploadText>
@@ -139,11 +156,13 @@ function Profile() {
                 <ButtonText color="#FFF">Atualizar Perfil</ButtonText>
             </Button>
 
+            <Button bg="black" onPress={() => setOpenDelete(true)} >
+                <ButtonText color="#FFF">DELETAR SEU PERFIL</ButtonText>
+            </Button>
+
             <Button bg="red" onPress={handleSignOut}>
                 <ButtonText color="white">Sair</ButtonText>
             </Button>
-
-
 
             <Modal visible={open} animationType="slide" transparent={true}>
                 <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>
@@ -166,6 +185,25 @@ function Profile() {
                         <ButtonText color="#FFF">Salvar</ButtonText>
                     </Button>
 
+                </ModalContainer>
+            </Modal>
+
+            <Modal visible={openDelete} animationType="slide" transparent={true}>
+                <ModalContainer behavior={Platform.OS === 'android' ? '' : 'padding'}>
+                    <ButtonBack onPress={() => setOpenDelete(false)}>
+                        <Feather
+                            name="arrow-left"
+                            size={22}
+                            color="#121212"
+                        />
+                        <ButtonText color="#121212">Voltar</ButtonText>
+                    </ButtonBack>
+
+                    <TextDelete>Tem certeza que deseja deletar seu perfil?</TextDelete>
+
+                    <Button bg="red" onPress={handleDeleteUser}>
+                        <ButtonText color="#FFF">Sim deletar perfil</ButtonText>
+                    </Button>
 
                 </ModalContainer>
             </Modal>

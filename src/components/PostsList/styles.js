@@ -58,6 +58,15 @@ export const Like = styled.Text`
 
 export const TimePost = styled.Text`
   color: #121212;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Delete = styled.TouchableOpacity`
+  padding-right: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 `;
 
 export const AnswerButton = styled.TouchableOpacity`
@@ -162,4 +171,80 @@ export const TextEmpity = styled.Text`
   font-size: 16px;
   margin-bottom: -85px;
   margin-top: -15px;
+`;
+
+export const ModalContainer = styled.KeyboardAvoidingView`
+  width: 100%;
+  height: 70%;
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ButtonBack = styled.TouchableOpacity`
+  position: absolute;
+  top: 15px;
+  left: 25px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ButtonText = styled.Text`
+  font-size: 18px;
+  color: ${props => props.color};
+`;
+
+export const TextAviso = styled.Text`
+  font-size: 18px;
+  color: black;
+`;
+
+export const Button = styled.TouchableOpacity`
+  margin-top: 16px;
+  background-color: ${props => props.bg};
+  width: 80%;
+  height: 50px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const TextDelete = styled.Text`
+  color: black;
+  font-size: 10px;
+`;
+
+export const Edit = styled.Text`
+  color: black;
+  font-size: 10px;
+`;
+
+export const EditDescription = styled.TouchableOpacity`
+  flex-direction: row;
+  margin-top: 9px;
+  align-items: center;
+`;
+
+export const Input = styled.TextInput`
+  background-color: #ddd;
+  width: 90%;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 18px;
+  color: #121212;
+  text-align: center;
+`;
+
+export const EditAnswer = styled.TouchableOpacity`
+  flex-direction: row;
+  margin-top: 5px;
+  margin-bottom: 18px;
+  align-items: center;
+`;
+
+export const EditAnswerText = styled.Text`
+  color: black;
+  font-size: 8px;
 `;
