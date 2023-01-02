@@ -265,7 +265,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
         <Container>
             <Header onPress={() => navigation.navigate("PostsUser", { title: data?.name })}>
                 {photoUser ? (
-                    <Avatar source={{ uri: 'http://192.168.0.147:3333/files/' + photoUser }} />
+                    <Avatar source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + photoUser }} />
                 ) : (
                     <Avatar source={require('../../assets/avatar.png')} />
                 )}
@@ -294,7 +294,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
             {data.imgPost ? (
                 <Banner
-                    source={{ uri: 'http://192.168.0.147:3333/files/' + data?.imgPost }} />
+                    source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + data?.imgPost }} />
             ) : (
                 <Empity></Empity>
             )}
@@ -357,7 +357,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
                         <AnswerContent onPress={() => navigation.navigate("PostsUser", { title: item?.name })}>
                             {item?.photo ? (
-                                <AvatarAnswer source={{ uri: 'http://192.168.0.147:3333/files/' + item?.photo }} />
+                                <AvatarAnswer source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + item?.photo }} />
                             ) : (
                                 <DivAvatar>
                                     <Avatar source={require('../../assets/avatar.png')} />
@@ -388,7 +388,7 @@ function PostsList({ data, respostas, userId, refreshingLike }) {
 
                         {item?.imgAnswer ? (
                             <BannerAnswer
-                                source={{ uri: 'http://192.168.0.147:3333/files/' + item?.imgAnswer }} />
+                                source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + item?.imgAnswer }} />
                         ) : (
                             <EmpityAnswer></EmpityAnswer>
                         )}

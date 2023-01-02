@@ -9,7 +9,7 @@ function SearchList({ data }){
     return(
         <Container onPress={ () => navigation.navigate("PostsUser", { title: data.name })}>
             {data?.photo ? (
-                    <Avatar source={{ uri: 'http://192.168.0.147:3333/files/' + data?.photo }} />
+                    <Avatar source={{ uri: 'https://apipostagens.builderseunegocioonline.com.br/files/' + data?.photo }} />
                 ) : (
                     <Avatar source={require('../../assets/avatar.png')} />
                 )} 
